@@ -23,8 +23,10 @@ contract Simple is Ownable {
         bool privatelyHosted;
     }
 
+    mapping (uint256 => address[]) public ownedByArray;
     mapping (uint256 => mapping(address => bool)) public ownedBy;
     mapping(uint256 => post) public posts;
+    mapping(address => uint256[]) postsOwnedArray;
     mapping (address => mapping(uint256 => bool)) public postsOwned;
 
   constructor(
@@ -52,5 +54,8 @@ contract Simple is Ownable {
       // TODO: verify payment
       ownedBy[postId][purchaser] = true;
       postsOwned[purchaser][postId] = true;
+      
+      ownedByArray[postId][ownedByArray[postId].length] =purchaser;
+      postsOwnedArray[purchaser].push(postId);
     }
 }
