@@ -35,11 +35,13 @@
     "url": "https://github.com/truffle-box/arbitrum-box/issues"
   },
   "homepage": "https://github.com/truffle-box/arbitrum-box#readme",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
-    "@truffle/hdwallet-provider": "^1.4.1",
     "@openzeppelin/contracts": "^4.6.0",
+    "@truffle/hdwallet-provider": "^1.4.1",
     "base64-sol": "^1.1.0",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "@ganache/console.log": "^0.3.0"
   }
 }
