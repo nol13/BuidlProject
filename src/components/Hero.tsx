@@ -12,11 +12,12 @@ export default function Hero() {
           className="max-w-sm rounded-lg shadow-2xl"
         />
         <div>
-          <h1 className="text-5xl font-bold">Box Office News!</h1>
+          <h1 className="text-5xl font-bold">Get your Articles on-chain!</h1>
           <p className="py-6">
-            Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-            excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
-            a id nisi.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum
+            soluta deserunt voluptate, eos nam nobis at inventore. Laborum quis
+            eveniet debitis nihil, rerum fugit at odio dolores nostrum
+            blanditiis praesentium!
           </p>
           <ConnectKitButton />
         </div>
