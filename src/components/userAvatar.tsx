@@ -5,7 +5,7 @@ import avatarimg from "../assets/avatarimg.jpeg";
 export default function UserAvatar() {
   const address = "0xA0Cf798816D4b9b986z6b5330EEa46a18382f251e";
 
-  const { data: ensName, isError, isLoading } = useEnsName({ address });
+  const { data: ensName, isError, isLoading } = useEnsName();
 
   return (
     <div className="flex justify-center items-center">
@@ -14,9 +14,7 @@ export default function UserAvatar() {
           <Image src={avatarimg} alt=" avatar image" />
         </div>
       </div>
-      <div className="badge badge-ghost p-2">
-        {isLoading ? "loading" : ensName}
-      </div>
+      <div className="p-2">{address}</div>
     </div>
   );
 }
