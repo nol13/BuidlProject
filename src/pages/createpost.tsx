@@ -2,14 +2,33 @@ import Navbar from "../components/navbar";
 import { useAccount } from "wagmi";
 import { connected } from "process";
 import Hero from "../components/Hero";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type Inputs = {
+  title: string;
+  articleText: string;
+  excerpt: string;
+  price: number;
+};
 
 const CreatePost = () => {
   const { isConnected } = useAccount();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+
   return (
     <>
       <Navbar />
       {isConnected ? (
-        <div className="flex flex-col items-center space-y-6 max-w-prose mx-auto">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col items-center space-y-6 max-w-prose mx-auto"
+        >
           <p className="text-4xl">Submit your article</p>
           <div className="w-full flex flex-col">
             <label>
@@ -19,6 +38,7 @@ const CreatePost = () => {
               type="text"
               placeholder="Title"
               className="input input-primary  min-w-min input-lg"
+              {...register("title")}
             />
           </div>
           <div className="w-full flex flex-col">
@@ -28,6 +48,7 @@ const CreatePost = () => {
             <textarea
               className="textarea w-full textarea-primary textarea-lg h-[400px]"
               placeholder="Main Text"
+              {...register("articleText")}
             ></textarea>
           </div>
           <div className="w-full flex flex-col">
@@ -37,6 +58,7 @@ const CreatePost = () => {
             <textarea
               className="textarea w-full textarea-primary textarea-lg h-[200px]"
               placeholder="Preview Text"
+              {...register("excerpt")}
             ></textarea>
           </div>
           <div className="w-full flex flex-col">
@@ -47,11 +69,14 @@ const CreatePost = () => {
               type="text"
               placeholder="METIS"
               className="input input-primary w-1/3 input-lg"
+              {...register("price")}
             />
           </div>
 
-          <button className="btn btn-primary w-full">Post</button>
-        </div>
+          <button type="submit" className="btn btn-primary w-full">
+            Post Article
+          </button>
+        </form>
       ) : (
         <Hero />
       )}
