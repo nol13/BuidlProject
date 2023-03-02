@@ -9,19 +9,31 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.16",
     "connectkit": "^1.1.1",
+    "daisyui": "^2.51.2",
     "ethers": "^5.7.0",
     "next": "^13.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+<<<<<<< HEAD
+    "theme-change": "^2.3.0",
     "wagmi": "~0.11.0"
+=======
+    "react-hook-form": "^7.43.3",
+    "react-simple-wysiwyg": "^2.1.4",
+    "slate-react": "^0.91.7"
+>>>>>>> origin/create_new_post
   },
   "devDependencies": {
     "@types/node": "^17.0.31",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.3",
+    "autoprefixer": "^10.4.13",
     "eslint": "8.22.0",
     "eslint-config-next": "^12.1.6",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7",
     "typescript": "^4.9.4"
   }
 }

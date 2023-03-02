@@ -1,17 +1,15 @@
-import { ConnectKitButton } from 'connectkit'
-import { useAccount } from 'wagmi'
+import { useAccount } from "wagmi";
+import Hero from "../components/Hero";
 
-import { Account } from '../components'
+import PostCollection from "../components/postCollection";
 
 function Page() {
-  const { isConnected } = useAccount()
+  const { isConnected } = useAccount();
   return (
-    <>
-      <h1>wagmi + ConnectKit + Next.js</h1>
-      <ConnectKitButton />
-      {isConnected && <Account />}
-    </>
-  )
+    <div className="h-screen overflow-hidden">
+      {isConnected ? <PostCollection /> : <Hero />}
+    </div>
+  );
 }
 
-export default Page
+export default Page;
