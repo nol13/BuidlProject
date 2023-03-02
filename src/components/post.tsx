@@ -3,7 +3,7 @@ import PostModal from "./postModal";
 import { HandThumbUpIcon, ShareIcon } from "@heroicons/react/24/outline";
 export default function Post() {
   return (
-    <div className="card card-compact gap-50 card-bordered bg-slate-200 dark:bg-gray-800">
+    <div className="card card-compact gap-50  bg-slate-50 dark:bg-[#383838]">
       <div className="card-body">
         <h2 className="card-title m-auto">Article Title</h2>
         <p>

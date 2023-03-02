@@ -1,5 +1,5 @@
 import { getDefaultClient } from "connectkit";
-import { createClient, configureChains } from "wagmi";
+import { createClient } from "wagmi";
 import {
   mainnet,
   polygon,

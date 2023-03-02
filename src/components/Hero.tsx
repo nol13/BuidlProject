@@ -4,7 +4,7 @@ import heroimg from "../assets/herotest.jpeg";
 
 export default function Hero() {
   return (
-    <div className="hero min-h-screen ">
+    <div className="hero h-screen overflow-hidden ">
       <div className="hero-content flex-col lg:flex-row">
         <Image
           src={heroimg}
