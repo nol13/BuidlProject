@@ -2,7 +2,7 @@ let simpleStorageInstance;
 
 const SimpleStorage = artifacts.require("Simple");
 
-contract("SimpleStorage", accounts => {
+contract("Simple", accounts => {
 
   beforeEach(async () => {
     simpleStorageInstance = await SimpleStorage.new();

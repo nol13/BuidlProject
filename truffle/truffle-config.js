@@ -59,7 +59,7 @@ module.exports = {
     },
     //for use with local environment -- use `npm runLocalArbitrum` to start
     ethereum_local: {
-      network_id: '*',
+      network_id: '1',
       host: '127.0.0.1',
       port: 7545,
       gasPrice: 0

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.19;
-
+import "../../node_modules/@ganache/console.log/console.sol";
 import "../../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
@@ -19,20 +18,8 @@ contract Simple is Ownable {
     event PostUpdated(
         string contentHash,
         string previewHash,
-        uint256 indexed postId
-    );
-
-    event PriceUpdated(
-        uint256 indexed postId,
-        uint256 price
-    );
-
-    event PostEnabled(
-        uint256 indexed postId
-    );
-
-    event PostDisabled(
-        uint256 indexed postId
+        uint256 price,
+        address indexed creator
     );
 
     event PostPurchased(address indexed purchaser, uint256 indexed postId);
@@ -42,7 +29,7 @@ contract Simple is Ownable {
         address creator;
         string contentHash;
         string previewHash;
-        bool disabled;
+        bool privatelyHosted;
     }
 
     mapping(uint256 => address[]) public ownedByArray;
@@ -70,30 +57,29 @@ contract Simple is Ownable {
             previewHash: previewHash,
             price: price,
             creator: msg.sender,
-            disabled: false
+            privatelyHosted: false
         });
 
         emit PostCreated(contentHash, previewHash, price, msg.sender);
     }
 
-    function updatePrice(
+    // delete this?
+    function updatePost(
         uint256 postId,
-        uint256 price
+        uint256 price,
+        string calldata contentHash,
+        string calldata previewHash
     ) public {
-        require(msg.sender == posts[postId].creator, "not ur post cant change price");
-        posts[postId].price = price;
-        emit PriceUpdated(price, postId);
-    }
+        require(msg.sender == posts[postId].creator, "not ur post");
+        posts[postId] = post({
+            creator: msg.sender,
+            price: price,
+            contentHash: contentHash,
+            previewHash: previewHash,
+            privatelyHosted: false
+        });
 
-    function toggleNewPurchasesEnabled(
-        uint256 postId,
-        bool disabled
-    ) public {
-        require(msg.sender == posts[postId].creator, "not ur post cant disable");
-        require(posts[postId].disabled != disabled, "already set like that");
-        posts[postId].disabled = disabled;
-        if (disabled) { emit PostDisabled(postId); }
-        else { emit PostEnabled(postId); }
+        emit PostUpdated(contentHash, previewHash, price, msg.sender);
     }
 
     function purchasePost(address purchaser, uint256 postId) public payable {
