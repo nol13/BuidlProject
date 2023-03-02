@@ -3,6 +3,7 @@ import { useAccount } from "wagmi";
 import { connected } from "process";
 import Hero from "../components/Hero";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { DefaultEditor } from "react-simple-wysiwyg";
 
 type Inputs = {
   title: string;
@@ -41,6 +42,8 @@ const CreatePost = () => {
               {...register("title")}
             />
           </div>
+          <DefaultEditor className="w-full" />
+
           <div className="w-full flex flex-col">
             <label>
               <span className="label-text text-2xl">Text</span>
