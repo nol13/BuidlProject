@@ -50,7 +50,7 @@ contract Simple is Ownable {
     mapping(uint256 => post) public posts;
     mapping(address => uint256[]) postsOwnedArray;
     mapping(address => mapping(uint256 => bool)) public postsOwned;
-    uint256 protocolFee = 0;
+    uint8 protocolFee = 0;
     address protocolTreasury;
 
     constructor(address newOwner) payable {
@@ -63,6 +63,8 @@ contract Simple is Ownable {
         string calldata previewHash,
         uint256 price
     ) public {
+      require(price >= 0, "we no pay you");
+
         _postIds.increment();
         uint256 postId = _postIds.current();
         posts[postId] = post({
@@ -96,19 +98,27 @@ contract Simple is Ownable {
         else { emit PostEnabled(postId); }
     }
 
+    function addressCanSeePost(
+        uint256 postId,
+        address addyThatWantsToSeeIt
+    ) public view returns (bool) {
+        if (posts[postId].price == 0) return true;
+        return ownedBy[postId][addyThatWantsToSeeIt];
+    }
+
     function purchasePost(address purchaser, uint256 postId) public payable {
         post memory p = posts[postId];
         require(msg.value >= p.price, "pay more");
         address payable addy = payable(p.creator);
         address payable protoAddy = payable(protocolTreasury);
-        uint256 fee = msg.value * protocolFee;
+        uint256 fee = msg.value * protocolFee / 100;
         uint256 royalties = msg.value - fee;
 
         (bool success, ) = addy.call{value: royalties}("");
         require(success, "Failed to send payment to creator");
 
         if (fee > 0) {
-            (bool successProto, ) = protoAddy.call{value: royalties}("");
+            (bool successProto, ) = protoAddy.call{value: fee}("");
             require(successProto, "Failed to send fee to us");
         }
 
@@ -123,5 +133,11 @@ contract Simple is Ownable {
 
     function setTreasury(address newTreasury) external onlyOwner {
         protocolTreasury = newTreasury;
+    }
+
+    function setProtocolFee(uint8 newFee) external onlyOwner {
+      require(newFee >= 0, "we no pay fee");
+      require(newFee <= 18, "lets no get crazy now");
+      protocolFee = newFee;
     }
 }
