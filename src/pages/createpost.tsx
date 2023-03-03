@@ -4,6 +4,8 @@ import { connected } from "process";
 import Hero from "../components/Hero";
 import { useForm, SubmitHandler } from "react-hook-form";
 // import { DefaultEditor } from "react-simple-wysiwyg";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { abi } from "../../contracts/Simple.json";
 
 type Inputs = {
   title: string;
@@ -17,10 +19,16 @@ const CreatePost = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    getValues,
     formState: { errors },
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const { config } = usePrepareContractWrite({
+    // address: "0xecb504d39723b0be0e3a9aa33d646642d1051ee1",
+    abi: abi,
+    functionName: "createPost",
+    args: ["", "", getValues("price")],
+  });
 
   return (
     <>
