@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Navbar from "../components/navbar";
+//import Navbar from "../components/navbar";
 import { useAccount, useSignMessage } from "wagmi";
 import { connected } from "process";
 import Hero from "../components/Hero";
@@ -19,7 +19,7 @@ type Inputs = {
   price: number;
 };
 
-const chain ="ethereum";
+const chain ="mumbai";
 
 const contract = require('../contractInfo/contract-addressBdl.json').Simple;
 
@@ -29,10 +29,10 @@ const accessControlConditions: any = [
     standardContractType: "",
     chain,
     method: "eth_getBalance",
-    parameters: ["postId", ":userAddress", "latest"],
+    parameters: [":userAddress", "latest"],
     returnValueTest: {
-      comparator: "==",
-      value: "true", // 0.000001 ETH
+      comparator: ">=",
+      value: "0.000000 ETH"
     },
   },
 ];
@@ -90,13 +90,51 @@ const CreatePost = () => {
 
   const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
     message: 'gm wagmi frens',
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: async (data, ...r) => {
+      console.log(data, r);
+      const authSig = {
+        "sig": data,
+        "derivedVia": "web3.eth.personal.sign",
+        "signedMessage": "'gm wagmi frens'",
+        "address": "0x6f3c67DA2827aaE123d1379939E2E7294d62C06B"
+      }
+    
+  
+      // Visit here to understand how to encrypt static content
+      // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
+      const { encryptedString, symmetricKey } = await LitJsSdk.encryptString("10101010010");
+      console.log(encryptedString);
+
+      /* const symmetricKey = await window.litNodeClient.getEncryptionKey({
+        accessControlConditions,
+        toDecrypt: encryptedSymmetricKey,
+        chain,
+        authSig,
+      }); */
+
+      const decryptedString = await LitJsSdk.decryptString(
+        encryptedString,
+        symmetricKey
+      );
+
+      console.log('decrypted:---', decryptedString)
+  
+      
+  
+      console.log("encrypted: ", encryptedString);
+      
+      const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
+        accessControlConditions,
+        symmetricKey,
+        authSig,
+        chain,
+      });
+    
     }
   })
 
   const litNodeClient = new LitJsSdk.LitNodeClient({
-    litNetwork: "ethereum",
+    litNetwork: chain,
   });
   litNodeClient.connect();
 
@@ -141,29 +179,12 @@ const CreatePost = () => {
     //const authSig = await LitJsSdk.checkAndSignAuthMessage({chain: "ethereum"})
     signMessage()
     console.log(1)
-    return;ß
-
-    // Visit here to understand how to encrypt static content
-    // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
-    const { encryptedString, symmetricKey } = await LitJsSdk.encryptString("fsdfdsfdsfdsf");
-    console.log(2)
-
-    
-
-    console.log("encrypted: ", encryptedString);
-    
-    const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
-      accessControlConditions,
-      symmetricKey,
-      authSig,
-      chain,
-    });
-  
+    return;
   };
 
   return (
     <>
-      <Navbar />
+      
       {isConnected || true ? (
         <form
           onSubmit={handleSubmit(onSubmit)}
