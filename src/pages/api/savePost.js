@@ -4,7 +4,8 @@ import { statSync } from "fs";
 export default async function handler(req, res) {
 
     const data = JSON.parse(req.body);
-    console.log(data);
+    const preview = data.preview;
+    const encryptedContent = data.encryptedContent;
 
     const bundlr = new Bundlr("https://devnet.bundlr.network", "matic", process.env.PRIVATE_KEY, { providerUrl: "https://rpc-mumbai.maticvigil.com" });
     await bundlr.ready();
@@ -18,20 +19,28 @@ export default async function handler(req, res) {
 
     //const bundlr = new Bundlr(data.node, data.currency, data.jwk);
 
-    const tx = bundlr.createTransaction("egegegegege")
+    const savePreview = async () => {
+      const tx1 = bundlr.createTransaction(data.preview);
+      await tx1.sign();
+      await tx1.upload();
+      return tx1.id;
+    }
 
-    // sign the transaction
-    await tx.sign()
+    const saveContent = async () => {
+      const tx2 = bundlr.createTransaction(data.content);
+      await tx2.sign()
+      await tx2.upload();
+      return tx2.id;
+    }
 
-    const id = tx.id
-    
-    // upload the transaction
-    //const result = await tx.upload();
-    
-    console.log("result:", tx.id);
+    const [id1, id2] = await Promise.all([savePreview(), saveContent()])
 
-    res.status(200).json({ txId: id });
+
+
+
+    console.log("result:", id1, id2);
+
+    res.status(200).json({ preview: id1, content: id2 });
   
-    //res.status(200).json({ address: bundlr.address });
     
   }
