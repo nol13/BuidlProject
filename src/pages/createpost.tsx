@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { useAccount } from "wagmi";
 import { connected } from "process";
 import Hero from "../components/Hero";
@@ -6,12 +6,13 @@ import { useForm, SubmitHandler } from "react-hook-form";
 // import { DefaultEditor } from "react-simple-wysiwyg";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { abi } from "../../contracts/Simple.json";
+import Simple from "../contractInfo/contract-addressBdl.json";
 
-import prettyBytes from 'pretty-bytes';
-import Script from 'next/script';
+// import prettyBytes from "pretty-bytes";
+import Script from "next/script";
 //@ts-ignore
-import LitJsSdk from 'lit-js-sdk';
-import { FileReadResult } from 'fs/promises';
+import LitJsSdk from "lit-js-sdk";
+import { FileReadResult } from "fs/promises";
 
 type Inputs = {
   title: string;
@@ -20,54 +21,49 @@ type Inputs = {
   price: number;
 };
 
+//
+// (Helper) Turn blob data to data URI
+// @param { Blob } blob
+// @return { Promise<String> } blob data in data URI
+//
+// const blobToDataURI = (blob: Blob) => {
+//   return new Promise((resolve, reject) => {
+//     var reader = new FileReader();
 
-  //
-  // (Helper) Turn blob data to data URI
-  // @param { Blob } blob
-  // @return { Promise<String> } blob data in data URI
-  //
-  const blobToDataURI = (blob: Blob) => {
-    return new Promise((resolve, reject) => {
-        var reader = new FileReader();
+//     reader.onload = (e: any) => {
+//       var data = e.target.result;
+//       resolve(data);
+//     };
+//     reader.readAsDataURL(blob);
+//   });
+// };
 
-        reader.onload = (e: any) => {
-        var data = e.target.result;
-        resolve(data);
-        };
-        reader.readAsDataURL(blob);
-    });
-  }
+//
+// (Helper) Convert data URI to blob
+// @param { String } dataURI
+// @return { Blob } blob object
+//
+// const dataURItoBlob = (dataURI: string) => {
+//   console.log(dataURI);
 
+//   var byteString = window.atob(dataURI.split(",")[1]);
+//   var mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+//   var ab = new ArrayBuffer(byteString.length);
+//   var ia = new Uint8Array(ab);
+//   for (var i = 0; i < byteString.length; i++) {
+//     ia[i] = byteString.charCodeAt(i);
+//   }
 
-  //
-  // (Helper) Convert data URI to blob
-  // @param { String } dataURI
-  // @return { Blob } blob object
-  //
-  const dataURItoBlob = (dataURI: string) => {
+//   var blob = new Blob([ab], { type: mimeString });
 
-    console.log(dataURI);
-
-    
-    var byteString = window.atob(dataURI.split(',')[1]);
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-    var ab = new ArrayBuffer(byteString.length);
-    var ia = new Uint8Array(ab);
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    
-    var blob = new Blob([ab], {type: mimeString});
-
-    return blob;
-  }
+//   return blob;
+// };
 
 const CreatePost = () => {
-
   const [JWK, setJWK] = useState<object>();
   const [arweaveAddress, setArweaveAddress] = useState(null);
 
-  const [currency, setCurrency] = useState('arweave');
+  const [currency, setCurrency] = useState("arweave");
   const [node, setNode] = useState("http://node1.bundlr.network");
 
   const [file, setFile] = useState(null);
@@ -86,7 +82,6 @@ const CreatePost = () => {
   const litNodeClient = new LitJsSdk.LitNodeClient();
   litNodeClient.connect();
 
-
   const { isConnected } = useAccount();
   const {
     register,
@@ -96,172 +91,181 @@ const CreatePost = () => {
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
   const { config } = usePrepareContractWrite({
-    // address: "0xecb504d39723b0be0e3a9aa33d646642d1051ee1",
+    address: require("../contractInfo/contract-addressBdl.json"),
     abi: abi,
     functionName: "createPost",
-    args: ["", "", getValues("price")],
+    args: ["123", "456", getValues("price")],
   });
 
-  const onClickEncryptImage = async (data: object) => {
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
-    const fileString = JSON.stringify(data);
+  //   const onClickEncryptImage = async (data: object) => {
+  //     const fileString = JSON.stringify(data);
 
-    console.log("fileInBase64:", fileString);
-    
-    const chain = 'ethereum';
+  //     console.log("fileInBase64:", fileString);
 
-    const authSig = await LitJsSdk.checkAndSignAuthMessage({chain})
+  //     const chain = "ethereum";
 
-    // Visit here to understand how to encrypt static content
-    // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
-    const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(fileString);
+  //     const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
 
-    const accessControlConditions: any = {};
-    
-    const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
-      accessControlConditions: accessControlConditions.accessControlConditions,
-      symmetricKey,
-      authSig,
-      chain,
-    });
-    
-    console.log("encryptedString:", encryptedString);
+  //     // Visit here to understand how to encrypt static content
+  //     // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
+  //     const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(
+  //       fileString
+  //     );
 
-    const encryptedStringInDataURI: any = await blobToDataURI(encryptedString);
+  //     const accessControlConditions: any = {};
 
-    console.log("encryptedStringInDataURI:", encryptedStringInDataURI);
+  //     const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
+  //       accessControlConditions: accessControlConditions.accessControlConditions,
+  //       symmetricKey,
+  //       authSig,
+  //       chain,
+  //     });
 
-    setEncryptedData(encryptedStringInDataURI);
+  //     console.log("encryptedString:", encryptedString);
 
-    setEncryptedSymmetricKey(encryptedSymmetricKey);
-    
-  }
+  //     const encryptedStringInDataURI: any = await blobToDataURI(encryptedString);
 
-  const onFetchEncryptedData = async () => {
-    
-    const downloadUrl = 'https://arweave.net/' + txId;
+  //     console.log("encryptedStringInDataURI:", encryptedStringInDataURI);
 
-    const data = await fetch(downloadUrl);
+  //     setEncryptedData(encryptedStringInDataURI);
 
-    const encryptedData = JSON.parse(await data.text());
+  //     setEncryptedSymmetricKey(encryptedSymmetricKey);
+  //   };
 
-    console.log("encryptedData:", encryptedData);
+  //   const onFetchEncryptedData = async () => {
+  //     const downloadUrl = "https://arweave.net/" + txId;
 
-    setDownloadedEncryptedData(encryptedData);
+  //     const data = await fetch(downloadUrl);
 
-  }
+  //     const encryptedData = JSON.parse(await data.text());
 
-  // 
+  //     console.log("encryptedData:", encryptedData);
+
+  //     setDownloadedEncryptedData(encryptedData);
+  //   };
+
+  //
   // (LIT) Decrypt downloaded encrypted data
   // @return { void }
-  // 
-  const onDecryptDownloadedData = async (downloadedEncryptedData: any) => {
+  //
+  //   const onDecryptDownloadedData = async (downloadedEncryptedData: any) => {
 
-    const authSig = await LitJsSdk.checkAndSignAuthMessage({chain: 'ethereum'})
+  //     const authSig = await LitJsSdk.checkAndSignAuthMessage({chain: 'ethereum'})
 
-    const symmetricKey = await litNodeClient.getEncryptionKey({
-      accessControlConditions: downloadedEncryptedData.accessControlConditions,
-      // Note, below we convert the encryptedSymmetricKey from a UInt8Array to a hex string.  This is because we obtained the encryptedSymmetricKey from "saveEncryptionKey" which returns a UInt8Array.  But the getEncryptionKey method expects a hex string.
-      toDecrypt: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16"),
-      chain: 'ethereum',
-      authSig,
-    });
+  //     const symmetricKey = await litNodeClient.getEncryptionKey({
+  //       accessControlConditions: downloadedEncryptedData.accessControlConditions,
+  //       // Note, below we convert the encryptedSymmetricKey from a UInt8Array to a hex string.  This is because we obtained the encryptedSymmetricKey from "saveEncryptionKey" which returns a UInt8Array.  But the getEncryptionKey method expects a hex string.
+  //       toDecrypt: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16"),
+  //       chain: 'ethereum',
+  //       authSig,
+  //     });
 
-    const decryptedString = await LitJsSdk.decryptString(
-      dataURItoBlob(downloadedEncryptedData.encryptedData),
-      symmetricKey
-    );
+  //     const decryptedString = await LitJsSdk.decryptString(
+  //       dataURItoBlob(downloadedEncryptedData.encryptedData),
+  //       symmetricKey
+  //     );
 
-    const originalFormat = atob(decryptedString);
+  //     const originalFormat = atob(decryptedString);
 
-    console.log("Original Format:", originalFormat);
+  //     console.log("Original Format:", originalFormat);
 
-    setDecryptedData(originalFormat);
+  //     setDecryptedData(originalFormat);
 
-  }
+  //   }
 
-//   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  //   const onSubmit: SubmitHandler<Inputs> = async (data) => {
 
-//     // encrypt data hete
+  //     // encrypt data hete
 
-//     let _JWK = data
-//     console.log("JWK:", _JWK);
+  //     let _JWK = data
+  //     console.log("JWK:", _JWK);
 
-//     setJWK(_JWK);
+  //     setJWK(_JWK);
 
-//     // arweave will be dealth from backend
-//     const res = await fetch('./api/arweave', {
-//       method: 'POST',
-//       body: JSON.stringify({
-//         currency,
-//         node,
-//         jwk: _JWK,
-//       })
-//     });
+  //     // arweave will be dealth from backend
+  //     const res = await fetch('./api/arweave', {
+  //       method: 'POST',
+  //       body: JSON.stringify({
+  //         currency,
+  //         node,
+  //         jwk: _JWK,
+  //       })
+  //     });
 
-//     const _arweaveAddress = (await res.json()).address;
+  //     const _arweaveAddress = (await res.json()).address;
 
-//     setArweaveAddress(_arweaveAddress);
-  
-//   };
+  //     setArweaveAddress(_arweaveAddress);
+
+  //   };
 
   return (
     <>
       {isConnected ? (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-center space-y-6 max-w-prose mx-auto"
-        >
-          <p className="text-4xl">Submit your article</p>
-          <div className="w-full flex flex-col">
-            <label>
-              <span className="label-text text-2xl">Title</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Title"
-              className="input input-primary  min-w-min input-lg"
-              {...register("title")}
-            />
-          </div>
-          {/* <DefaultEditor className="w-full" /> */}
+        <>
+          {isLoading && <div>Check Wallet</div>}
+          {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
 
-          <div className="w-full flex flex-col">
-            <label>
-              <span className="label-text text-2xl">Text</span>
-            </label>
-            <textarea
-              className="textarea w-full textarea-primary textarea-lg h-[400px]"
-              placeholder="Main Text"
-              {...register("articleText")}
-            ></textarea>
-          </div>
-          <div className="w-full flex flex-col">
-            <label>
-              <span className="label-text text-2xl">Excerpt</span>
-            </label>
-            <textarea
-              className="textarea w-full textarea-primary textarea-lg h-[200px]"
-              placeholder="Preview Text"
-              {...register("excerpt")}
-            ></textarea>
-          </div>
-          <div className="w-full flex flex-col">
-            <label>
-              <span className="label-text text-2xl">Price</span>
-            </label>
-            <input
-              type="text"
-              placeholder="METIS"
-              className="input input-primary w-1/3 input-lg"
-              {...register("price")}
-            />
-          </div>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col items-center space-y-6 max-w-prose mx-auto"
+          >
+            <p className="text-4xl">Submit your article</p>
+            <div className="w-full flex flex-col">
+              <label>
+                <span className="label-text text-2xl">Title</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Title"
+                className="input input-primary  min-w-min input-lg"
+                {...register("title")}
+              />
+            </div>
+            {/* <DefaultEditor className="w-full" /> */}
 
-          <button type="submit" className="btn btn-primary w-full">
-            Post Article
-          </button>
-        </form>
+            <div className="w-full flex flex-col">
+              <label>
+                <span className="label-text text-2xl">Text</span>
+              </label>
+              <textarea
+                className="textarea w-full textarea-primary textarea-lg h-[400px]"
+                placeholder="Main Text"
+                {...register("articleText")}
+              ></textarea>
+            </div>
+            <div className="w-full flex flex-col">
+              <label>
+                <span className="label-text text-2xl">Excerpt</span>
+              </label>
+              <textarea
+                className="textarea w-full textarea-primary textarea-lg h-[200px]"
+                placeholder="Preview Text"
+                {...register("excerpt")}
+              ></textarea>
+            </div>
+            <div className="w-full flex flex-col">
+              <label>
+                <span className="label-text text-2xl">Price</span>
+              </label>
+              <input
+                type="text"
+                placeholder="METIS"
+                className="input input-primary w-1/3 input-lg"
+                {...register("price")}
+              />
+            </div>
+
+            <button
+              type="submit"
+              onClick={() => write?.()}
+              className="btn btn-primary w-full"
+            >
+              Post Article
+            </button>
+          </form>
+        </>
       ) : (
         <Hero />
       )}
