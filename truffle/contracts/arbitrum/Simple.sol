@@ -109,6 +109,37 @@ contract Simple is Ownable {
         return ownedBy[postId][addyThatWantsToSeeIt];
     }
 
+    // TODO: remove these when we can
+    function postsOwnedByAddress(
+        address addy
+    ) public view returns (uint256[] memory) {
+        uint256[] memory b = new uint256[](postsOwnedArray[addy].length);
+        for (uint i=0; i < b.length; i++) {
+            b[i] = postsOwnedArray[addy][i];
+        }
+        return b;
+    }
+
+    function postsByAddress(
+        address addy
+    ) public view returns (uint256[] memory) {
+        uint256[] memory b = new uint256[](postsCreatedArray[addy].length);
+        for (uint i=0; i < b.length; i++) {
+            b[i] = postsCreatedArray[addy][i];
+        }
+        return b;
+    }
+
+    function ownersOfPost(
+        uint256 postId
+    ) public view returns (address[] memory) {
+        address[] memory b = new address[](ownedByArray[postId].length);
+        for (uint i=0; i < b.length; i++) {
+            b[i] = ownedByArray[postId][i];
+        }
+        return b;
+    }
+
     function purchasePost(address purchaser, uint256 postId) public payable {
         post memory p = posts[postId];
         require(msg.value >= p.price, "pay more");
