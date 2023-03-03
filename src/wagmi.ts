@@ -3,13 +3,14 @@ import { createClient } from "wagmi";
 import {
   mainnet,
   polygon,
-  metis,
-  metisGoerli,
-  arbitrum,
-  optimism,
+  // metis,
+  // metisGoerli,
+  // arbitrum,
+  // optimism,
+  polygonMumbai,
 } from "wagmi/chains";
 
-const chains = [mainnet, polygon, metisGoerli, metis, arbitrum, optimism];
+const chains = [mainnet, polygon, polygonMumbai];
 
 export const client = createClient(
   getDefaultClient({

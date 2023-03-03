@@ -4,7 +4,11 @@ import { connected } from "process";
 import Hero from "../components/Hero";
 import { useForm, SubmitHandler } from "react-hook-form";
 // import { DefaultEditor } from "react-simple-wysiwyg";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useContractRead,
+} from "wagmi";
 import { abi } from "../../contracts/Simple.json";
 import Simple from "../contractInfo/contract-addressBdl.json";
 
@@ -89,12 +93,25 @@ const CreatePost = () => {
     getValues,
     formState: { errors },
   } = useForm<Inputs>();
+
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+
   const { config } = usePrepareContractWrite({
-    address: require("../contractInfo/contract-addressBdl.json"),
+    address: "0x9159574681A238230C233a93BA6249593dd9788e",
     abi: abi,
     functionName: "createPost",
     args: ["123", "456", getValues("price")],
+  });
+
+  const {
+    data: dataRead,
+    isError,
+    isLoading: isLoadingRead,
+    isSuccess: isSuccessRead,
+  } = useContractRead({
+    address: "0x9159574681A238230C233a93BA6249593dd9788e",
+    abi: abi,
+    functionName: "createPost",
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
@@ -204,13 +221,15 @@ const CreatePost = () => {
     <>
       {isConnected ? (
         <>
-          {isLoading && <div>Check Wallet</div>}
-          {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
-
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col items-center space-y-6 max-w-prose mx-auto"
           >
+            {isLoadingRead && <div>Check Wallet</div>}
+            {isSuccessRead && (
+              <div>Transaction: {JSON.stringify(dataRead)}</div>
+            )}
+
             <p className="text-4xl">Submit your article</p>
             <div className="w-full flex flex-col">
               <label>
@@ -258,7 +277,7 @@ const CreatePost = () => {
             </div>
 
             <button
-              type="submit"
+              //   type="submit"
               onClick={() => write?.()}
               className="btn btn-primary w-full"
             >
