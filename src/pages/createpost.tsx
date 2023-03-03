@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Navbar from "../components/navbar";
-import { useAccount } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { connected } from "process";
 import Hero from "../components/Hero";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -18,6 +18,24 @@ type Inputs = {
   excerpt: string;
   price: number;
 };
+
+const chain ="ethereum";
+
+const contract = require('../contractInfo/contract-addressBdl.json').Simple;
+
+const accessControlConditions: any = [
+  {
+    contractAddress: contract,
+    standardContractType: "",
+    chain,
+    method: "eth_getBalance",
+    parameters: ["postId", ":userAddress", "latest"],
+    returnValueTest: {
+      comparator: "==",
+      value: "true", // 0.000001 ETH
+    },
+  },
+];
 
 
   //
@@ -63,26 +81,23 @@ type Inputs = {
 
 const CreatePost = () => {
 
-  const [JWK, setJWK] = useState<object>();
-  const [arweaveAddress, setArweaveAddress] = useState(null);
-
-  const [currency, setCurrency] = useState('arweave');
-  const [node, setNode] = useState("http://node1.bundlr.network");
-
-  const [file, setFile] = useState(null);
-  const [fileSize, setFileSize] = useState(null);
   const [txId, setTxId] = useState(null);
 
-  // -- lit states
-  const [accessControlConditions, setAccessControlConditiosn] = useState();
-  const [humanised, setHumanised] = useState(null);
   const [encryptedData, setEncryptedData] = useState(null);
   const [encryptedSymmetricKey, setEncryptedSymmetricKey] = useState(null);
   const [downloadedEncryptedData, setDownloadedEncryptedData] = useState(null);
   const [decryptedData, setDecryptedData] = useState<string>();
 
-  // -- init litNodeClient
-  const litNodeClient = new LitJsSdk.LitNodeClient();
+  const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
+    message: 'gm wagmi frens',
+    onSuccess: (data) => {
+      console.log(data)
+    }
+  })
+
+  const litNodeClient = new LitJsSdk.LitNodeClient({
+    litNetwork: "ethereum",
+  });
   litNodeClient.connect();
 
 
@@ -94,80 +109,16 @@ const CreatePost = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onClickEncryptImage = async (data: object) => {
-
-    const fileString = JSON.stringify(data);
-
-    console.log("fileInBase64:", fileString);
-    
-    const chain = 'ethereum';
+  const decryptContent = async (downloadedEncryptedData: any) => {
 
     const authSig = await LitJsSdk.checkAndSignAuthMessage({chain})
-
-    // Visit here to understand how to encrypt static content
-    // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
-    const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(fileString);
-
-    const accessControlConditions: any = [
-      {
-        contractAddress: "",
-        standardContractType: "",
-        chain: "ethereum",
-        method: "eth_getBalance",
-        parameters: [":userAddress", "latest"],
-        returnValueTest: {
-          comparator: ">=",
-          value: "1000000000000", // 0.000001 ETH
-        },
-      },
-    ];;
-    
-    const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
-      accessControlConditions: accessControlConditions.accessControlConditions,
-      symmetricKey,
-      authSig,
-      chain,
-    });
-    
-    console.log("encryptedString:", encryptedString);
-
-    const encryptedStringInDataURI: any = await blobToDataURI(encryptedString);
-
-    console.log("encryptedStringInDataURI:", encryptedStringInDataURI);
-
-    setEncryptedData(encryptedStringInDataURI);
-
-    setEncryptedSymmetricKey(encryptedSymmetricKey);
-    
-  }
-
-  const onFetchEncryptedData = async () => {
-    
-    const downloadUrl = 'https://arweave.net/' + txId;
-
-    const data = await fetch(downloadUrl);
-
-    const encryptedData = JSON.parse(await data.text());
-
-    console.log("encryptedData:", encryptedData);
-
-    setDownloadedEncryptedData(encryptedData);
-
-  }
-
-  // 
-  // (LIT) Decrypt downloaded encrypted data
-  // @return { void }
-  // 
-  const onDecryptDownloadedData = async (downloadedEncryptedData: any) => {
-
-    const authSig = await LitJsSdk.checkAndSignAuthMessage({chain: 'ethereum'})
+    return;
 
     const symmetricKey = await litNodeClient.getEncryptionKey({
       accessControlConditions: downloadedEncryptedData.accessControlConditions,
       // Note, below we convert the encryptedSymmetricKey from a UInt8Array to a hex string.  This is because we obtained the encryptedSymmetricKey from "saveEncryptionKey" which returns a UInt8Array.  But the getEncryptionKey method expects a hex string.
       toDecrypt: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16"),
-      chain: 'ethereum',
+      chain,
       authSig,
     });
 
@@ -176,43 +127,44 @@ const CreatePost = () => {
       symmetricKey
     );
 
-    const originalFormat = atob(decryptedString);
-
-    console.log("Original Format:", originalFormat);
-
-    setDecryptedData(originalFormat);
+    console.log(decryptedString);
 
   }
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
 
-    // encrypt data hete
+    // encrypt data here
 
-    let _JWK = data
-    console.log("JWK:", _JWK);
+    console.log(0, data);
+    //return;
 
-    setJWK(_JWK);
+    //const authSig = await LitJsSdk.checkAndSignAuthMessage({chain: "ethereum"})
+    signMessage()
+    console.log(1)
+    return;ß
 
-    // arweave will be dealth from backend
-    const res = await fetch('./api/arweave', {
-      method: 'POST',
-      body: JSON.stringify({
-        currency,
-        node,
-        jwk: _JWK,
-      })
+    // Visit here to understand how to encrypt static content
+    // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
+    const { encryptedString, symmetricKey } = await LitJsSdk.encryptString("fsdfdsfdsfdsf");
+    console.log(2)
+
+    
+
+    console.log("encrypted: ", encryptedString);
+    
+    const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
+      accessControlConditions,
+      symmetricKey,
+      authSig,
+      chain,
     });
-
-    const _arweaveAddress = (await res.json()).address;
-
-    setArweaveAddress(_arweaveAddress);
   
   };
 
   return (
     <>
       <Navbar />
-      {isConnected ? (
+      {isConnected || true ? (
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col items-center space-y-6 max-w-prose mx-auto"
