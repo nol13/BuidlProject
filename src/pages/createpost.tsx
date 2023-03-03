@@ -24,7 +24,6 @@ const CreatePost = () => {
 
   return (
     <>
-      <Navbar />
       {isConnected ? (
         <form
           onSubmit={handleSubmit(onSubmit)}
