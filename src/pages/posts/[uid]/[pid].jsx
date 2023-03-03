@@ -12,7 +12,7 @@ const Post = () => {
     
     const savePost = async () => {
             
-        const posts = await fetch('/api/savePost', { method: "POST", body: JSON.stringify({heh: 5, y: 'lol'})});
+        const posts = await fetch('/api/savePost', { method: "POST", body: JSON.stringify({preview: 5, encryptedContent: 'lol'})});
         const pj = await posts.json();
         console.log(pj)
         setPosts(pj);

@@ -81,6 +81,8 @@ const CreatePost = () => {
   const [encryptedSymmetricKey, setEncryptedSymmetricKey] = useState(null);
   const [downloadedEncryptedData, setDownloadedEncryptedData] = useState(null);
   const [decryptedData, setDecryptedData] = useState<string>();
+  const [contentHash, setContentHash] = useState("");
+  const [previewHash, setPreviewHash] = useState("");
 
   // -- init litNodeClient
   const litNodeClient = new LitJsSdk.LitNodeClient();
@@ -95,23 +97,29 @@ const CreatePost = () => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    console.log("data.articleText", data.articleText);
     const hashes = await fetch("/api/savePost", {
       method: "POST",
       body: JSON.stringify({
-        preview: JSON.stringify({ title: data.title, preview: "lol" }),
-        encryptedContent: data.excerpt,
+        preview: JSON.stringify({ title: data.title, preview: data.excerpt }),
+        encryptedContent: data.articleText,
       }),
     });
-    const pj = await hashes.json();
-    console.log(pj);
-    console.log(data);
+    hashes.json().then((pj) => {
+      console.log("pj from .then", pj);
+      console.log("data from .then", data);
+      setContentHash(pj.content);
+      console.log("contentHash", contentHash);
+      setPreviewHash(pj.preview);
+      // use the config value here
+    });
   };
 
   const { config } = usePrepareContractWrite({
     address: "0x9159574681A238230C233a93BA6249593dd9788e",
     abi: abi,
     functionName: "createPost",
-    args: ["123", "456", getValues("price")],
+    args: [contentHash, previewHash, getValues("price")],
   });
 
   const {
@@ -310,7 +318,7 @@ const CreatePost = () => {
 
             <button
               type="submit"
-              //   onClick={() => write?.()}
+              onClick={() => write?.()}
               className="btn btn-primary w-full"
             >
               Post Article
