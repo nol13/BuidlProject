@@ -1,4 +1,4 @@
-import Navbar from "../components/navbar";
+import { useState } from 'react';
 import { useAccount } from "wagmi";
 import { connected } from "process";
 import Hero from "../components/Hero";
@@ -7,6 +7,12 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { abi } from "../../contracts/Simple.json";
 
+import prettyBytes from 'pretty-bytes';
+import Script from 'next/script';
+//@ts-ignore
+import LitJsSdk from 'lit-js-sdk';
+import { FileReadResult } from 'fs/promises';
+
 type Inputs = {
   title: string;
   articleText: string;
@@ -14,7 +20,73 @@ type Inputs = {
   price: number;
 };
 
+
+  //
+  // (Helper) Turn blob data to data URI
+  // @param { Blob } blob
+  // @return { Promise<String> } blob data in data URI
+  //
+  const blobToDataURI = (blob: Blob) => {
+    return new Promise((resolve, reject) => {
+        var reader = new FileReader();
+
+        reader.onload = (e: any) => {
+        var data = e.target.result;
+        resolve(data);
+        };
+        reader.readAsDataURL(blob);
+    });
+  }
+
+
+  //
+  // (Helper) Convert data URI to blob
+  // @param { String } dataURI
+  // @return { Blob } blob object
+  //
+  const dataURItoBlob = (dataURI: string) => {
+
+    console.log(dataURI);
+
+    
+    var byteString = window.atob(dataURI.split(',')[1]);
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    
+    var blob = new Blob([ab], {type: mimeString});
+
+    return blob;
+  }
+
 const CreatePost = () => {
+
+  const [JWK, setJWK] = useState<object>();
+  const [arweaveAddress, setArweaveAddress] = useState(null);
+
+  const [currency, setCurrency] = useState('arweave');
+  const [node, setNode] = useState("http://node1.bundlr.network");
+
+  const [file, setFile] = useState(null);
+  const [fileSize, setFileSize] = useState(null);
+  const [txId, setTxId] = useState(null);
+
+  // -- lit states
+  const [accessControlConditions, setAccessControlConditiosn] = useState();
+  const [humanised, setHumanised] = useState(null);
+  const [encryptedData, setEncryptedData] = useState(null);
+  const [encryptedSymmetricKey, setEncryptedSymmetricKey] = useState(null);
+  const [downloadedEncryptedData, setDownloadedEncryptedData] = useState(null);
+  const [decryptedData, setDecryptedData] = useState<string>();
+
+  // -- init litNodeClient
+  const litNodeClient = new LitJsSdk.LitNodeClient();
+  litNodeClient.connect();
+
+
   const { isConnected } = useAccount();
   const {
     register,
@@ -29,6 +101,109 @@ const CreatePost = () => {
     functionName: "createPost",
     args: ["", "", getValues("price")],
   });
+
+  const onClickEncryptImage = async (data: object) => {
+
+    const fileString = JSON.stringify(data);
+
+    console.log("fileInBase64:", fileString);
+    
+    const chain = 'ethereum';
+
+    const authSig = await LitJsSdk.checkAndSignAuthMessage({chain})
+
+    // Visit here to understand how to encrypt static content
+    // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
+    const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(fileString);
+
+    const accessControlConditions: any = {};
+    
+    const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
+      accessControlConditions: accessControlConditions.accessControlConditions,
+      symmetricKey,
+      authSig,
+      chain,
+    });
+    
+    console.log("encryptedString:", encryptedString);
+
+    const encryptedStringInDataURI: any = await blobToDataURI(encryptedString);
+
+    console.log("encryptedStringInDataURI:", encryptedStringInDataURI);
+
+    setEncryptedData(encryptedStringInDataURI);
+
+    setEncryptedSymmetricKey(encryptedSymmetricKey);
+    
+  }
+
+  const onFetchEncryptedData = async () => {
+    
+    const downloadUrl = 'https://arweave.net/' + txId;
+
+    const data = await fetch(downloadUrl);
+
+    const encryptedData = JSON.parse(await data.text());
+
+    console.log("encryptedData:", encryptedData);
+
+    setDownloadedEncryptedData(encryptedData);
+
+  }
+
+  // 
+  // (LIT) Decrypt downloaded encrypted data
+  // @return { void }
+  // 
+  const onDecryptDownloadedData = async (downloadedEncryptedData: any) => {
+
+    const authSig = await LitJsSdk.checkAndSignAuthMessage({chain: 'ethereum'})
+
+    const symmetricKey = await litNodeClient.getEncryptionKey({
+      accessControlConditions: downloadedEncryptedData.accessControlConditions,
+      // Note, below we convert the encryptedSymmetricKey from a UInt8Array to a hex string.  This is because we obtained the encryptedSymmetricKey from "saveEncryptionKey" which returns a UInt8Array.  But the getEncryptionKey method expects a hex string.
+      toDecrypt: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16"),
+      chain: 'ethereum',
+      authSig,
+    });
+
+    const decryptedString = await LitJsSdk.decryptString(
+      dataURItoBlob(downloadedEncryptedData.encryptedData),
+      symmetricKey
+    );
+
+    const originalFormat = atob(decryptedString);
+
+    console.log("Original Format:", originalFormat);
+
+    setDecryptedData(originalFormat);
+
+  }
+
+//   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+
+//     // encrypt data hete
+
+//     let _JWK = data
+//     console.log("JWK:", _JWK);
+
+//     setJWK(_JWK);
+
+//     // arweave will be dealth from backend
+//     const res = await fetch('./api/arweave', {
+//       method: 'POST',
+//       body: JSON.stringify({
+//         currency,
+//         node,
+//         jwk: _JWK,
+//       })
+//     });
+
+//     const _arweaveAddress = (await res.json()).address;
+
+//     setArweaveAddress(_arweaveAddress);
+  
+//   };
 
   return (
     <>

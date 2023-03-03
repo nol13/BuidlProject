@@ -6,7 +6,7 @@ import { useEffect } from "react";
 const Navbar = () => {
   const { isConnected } = useAccount();
   useEffect(() => {
-    themeChange(false);
+    //themeChange(false);
   }, []);
 
   return (
