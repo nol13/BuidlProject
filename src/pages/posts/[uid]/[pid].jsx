@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import {useAccount} from "wagmi";
-import {Account} from "../../../components";
+import {Account} from "/src/components/Account";
 
 const Post = () => {
     const { isConnected } = useAccount();

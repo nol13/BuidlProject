@@ -1,6 +1,7 @@
 import Bundlr from '@bundlr-network/client';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export default function handler(req, res) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const data = JSON.parse(req.body);
 

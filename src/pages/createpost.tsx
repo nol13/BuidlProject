@@ -10,6 +10,7 @@ import prettyBytes from 'pretty-bytes';
 import Script from 'next/script';
 //@ts-ignore
 import LitJsSdk from 'lit-js-sdk';
+import { FileReadResult } from 'fs/promises';
 
 type Inputs = {
   title: string;
@@ -17,6 +18,48 @@ type Inputs = {
   excerpt: string;
   price: number;
 };
+
+
+  //
+  // (Helper) Turn blob data to data URI
+  // @param { Blob } blob
+  // @return { Promise<String> } blob data in data URI
+  //
+  const blobToDataURI = (blob: Blob) => {
+    return new Promise((resolve, reject) => {
+        var reader = new FileReader();
+
+        reader.onload = (e: any) => {
+        var data = e.target.result;
+        resolve(data);
+        };
+        reader.readAsDataURL(blob);
+    });
+  }
+
+
+  //
+  // (Helper) Convert data URI to blob
+  // @param { String } dataURI
+  // @return { Blob } blob object
+  //
+  const dataURItoBlob = (dataURI: string) => {
+
+    console.log(dataURI);
+
+    
+    var byteString = window.atob(dataURI.split(',')[1]);
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    
+    var blob = new Blob([ab], {type: mimeString});
+
+    return blob;
+  }
 
 const CreatePost = () => {
 
@@ -31,12 +74,12 @@ const CreatePost = () => {
   const [txId, setTxId] = useState(null);
 
   // -- lit states
-  const [accessControlConditions, setAccessControlConditiosn] = useState(null);
+  const [accessControlConditions, setAccessControlConditiosn] = useState();
   const [humanised, setHumanised] = useState(null);
   const [encryptedData, setEncryptedData] = useState(null);
   const [encryptedSymmetricKey, setEncryptedSymmetricKey] = useState(null);
   const [downloadedEncryptedData, setDownloadedEncryptedData] = useState(null);
-  const [decryptedData, setDecryptedData] = useState(null);
+  const [decryptedData, setDecryptedData] = useState<string>();
 
   // -- init litNodeClient
   const litNodeClient = new LitJsSdk.LitNodeClient();
@@ -64,6 +107,8 @@ const CreatePost = () => {
     // Visit here to understand how to encrypt static content
     // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
     const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(fileString);
+
+    const accessControlConditions: any = {};
     
     const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
       accessControlConditions: accessControlConditions.accessControlConditions,
@@ -74,7 +119,7 @@ const CreatePost = () => {
     
     console.log("encryptedString:", encryptedString);
 
-    const encryptedStringInDataURI = await blobToDataURI(encryptedString);
+    const encryptedStringInDataURI: any = await blobToDataURI(encryptedString);
 
     console.log("encryptedStringInDataURI:", encryptedStringInDataURI);
 
@@ -102,7 +147,7 @@ const CreatePost = () => {
   // (LIT) Decrypt downloaded encrypted data
   // @return { void }
   // 
-  const onDecryptDownloadedData = async () => {
+  const onDecryptDownloadedData = async (downloadedEncryptedData: any) => {
 
     const authSig = await LitJsSdk.checkAndSignAuthMessage({chain: 'ethereum'})
 

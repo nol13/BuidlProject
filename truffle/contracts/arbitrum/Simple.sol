@@ -51,7 +51,7 @@ contract Simple is Ownable {
     mapping(uint256 => post) public posts;
     mapping(address => uint256[]) postsOwnedArray;
     mapping(address => mapping(uint256 => bool)) public postsOwned;
-    mapping(address => uint256[]) postsCreatedArray;
+    mapping(address => uint256[]) public postsCreatedArray;
     uint8 protocolFee = 0;
     address protocolTreasury;
 
