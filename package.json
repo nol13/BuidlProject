@@ -12,6 +12,7 @@
     "@bundlr-network/client": "^0.10.5",
     "@heroicons/react": "^2.0.16",
     "@safe-global/auth-kit": "^0.1.0-alpha.1",
+    "@safe-global/safe-react-components": "^2.0.3",
     "@web3auth/base": "^4.6.0",
     "connectkit": "^1.1.1",
     "daisyui": "^2.51.2",
