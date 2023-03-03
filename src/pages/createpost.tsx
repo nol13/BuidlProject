@@ -108,7 +108,19 @@ const CreatePost = () => {
     // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
     const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(fileString);
 
-    const accessControlConditions: any = {};
+    const accessControlConditions: any = [
+      {
+        contractAddress: "",
+        standardContractType: "",
+        chain: "ethereum",
+        method: "eth_getBalance",
+        parameters: [":userAddress", "latest"],
+        returnValueTest: {
+          comparator: ">=",
+          value: "1000000000000", // 0.000001 ETH
+        },
+      },
+    ];;
     
     const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
       accessControlConditions: accessControlConditions.accessControlConditions,

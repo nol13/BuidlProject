@@ -9,6 +9,15 @@ const Post = () => {
     const router = useRouter();
     const { uid, pid } = router.query;
     const [posts, setPosts] = useState([])
+    const [bundleID, setBundleId] = useState([])
+    
+    const savePost = async () => {
+            
+        const posts = await fetch('/api/savePost', { method: "POST", body: JSON.stringify({heh: 5, y: 'lol'})});
+        const pj = await posts.json();
+        console.log(pj)
+        setPosts(pj);
+    };
 
     useEffect(() => {
         const getPosts = async () => {
@@ -20,10 +29,12 @@ const Post = () => {
         };
         getPosts();
     }, [uid])
+
+
     return (
         <div>
             <div>{isConnected && <Account />}</div>
-            <div>uid: {uid} pid: {pid}</div>
+            <div onClick={savePost}>uid: {uid} pid: {pid}</div>
     </div>
 
     )
