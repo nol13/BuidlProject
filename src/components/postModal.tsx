@@ -19,7 +19,9 @@ export default function PostModal() {
           <label
             htmlFor="modal"
             className="btn btn-sm btn-circle absolute right-2 top-2"
-          ></label>
+          >
+            X
+          </label>
           <h3 className="text-lg font-bold">Buying Article from USER</h3>
           <p className="py-4">the price is 0,1ETH</p>
         </div>

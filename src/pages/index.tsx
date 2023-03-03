@@ -6,7 +6,7 @@ import PostCollection from "../components/postCollection";
 function Page() {
   const { isConnected } = useAccount();
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-screen ">
       {isConnected ? <PostCollection /> : <Hero />}
     </div>
   );

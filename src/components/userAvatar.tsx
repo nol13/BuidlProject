@@ -10,7 +10,7 @@ export default function UserAvatar() {
   const { data: ensName, isError, isLoading } = useEnsName();
 
   return (
-    <Link href={"/"}>
+    <Link href={"/user/10"}>
       <div className="flex justify-center items-center">
         <div className="avatar">
           <div className="w-10 rounded-full">
