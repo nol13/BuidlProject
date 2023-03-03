@@ -45,11 +45,13 @@ contract Simple is Ownable {
         bool disabled;
     }
 
+    // shouldnt need to store owned arrays once we have indexing setup?
     mapping(uint256 => address[]) public ownedByArray;
     mapping(uint256 => mapping(address => bool)) public ownedBy;
     mapping(uint256 => post) public posts;
     mapping(address => uint256[]) postsOwnedArray;
     mapping(address => mapping(uint256 => bool)) public postsOwned;
+    mapping(address => uint256[]) postsCreatedArray;
     uint8 protocolFee = 0;
     address protocolTreasury;
 
@@ -74,6 +76,7 @@ contract Simple is Ownable {
             creator: msg.sender,
             disabled: false
         });
+        postsCreatedArray[msg.sender].push(postId);
 
         emit PostCreated(contentHash, previewHash, price, msg.sender);
     }
