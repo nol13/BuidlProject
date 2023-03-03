@@ -18,7 +18,7 @@ function App({ Component, pageProps }: AppProps) {
         <NextHead>
           <title>My wagmi + ConnectKit App</title>
         </NextHead>
-        <AuthKit />
+        <Navbar />
         {mounted && <Component {...pageProps} />}
       </ConnectKitProvider>
     </WagmiConfig>

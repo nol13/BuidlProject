@@ -2,9 +2,12 @@ import {
   SafeAuthKit,
   SafeAuthProviderType,
   SafeAuthSignInData,
+  SafeAuthEvents,
 } from "@safe-global/auth-kit";
 import { useEffect, useState } from "react";
 import { SafeEventEmitterProvider } from "@web3auth/base";
+import { EthHashInfo } from "@safe-global/safe-react-components";
+
 import { AuthkitBar } from "./authkitBar";
 
 export default function AuthKit() {
@@ -42,6 +45,9 @@ export default function AuthKit() {
 
     setSafeAuthSignInResponse(response);
     setProvider(safeAuth.getProvider() as SafeEventEmitterProvider);
+    safeAuth.subscribe(SafeAuthEvents.SIGNED_IN, () => {
+      console.log("goo");
+    });
   };
 
   const logout = async () => {
@@ -56,6 +62,26 @@ export default function AuthKit() {
   return (
     <>
       <AuthkitBar onLogin={login} onLogout={logout} isLoggedIn={!!provider} />
+      {safeAuthSignInResponse?.eoa && (
+        <div className="container">
+          <p>owner</p>
+        </div>
+      )}
     </>
   );
 }
+
+const getPrefix = (chainId: string) => {
+  switch (chainId) {
+    case "0x1":
+      return "eth";
+    case "0x5":
+      return "gor";
+    case "0x100":
+      return "gno";
+    case "0x137":
+      return "matic";
+    default:
+      return "eth";
+  }
+};
