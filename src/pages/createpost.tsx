@@ -94,7 +94,18 @@ const CreatePost = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const hashes = await fetch("/api/savePost", {
+      method: "POST",
+      body: JSON.stringify({
+        preview: JSON.stringify({ title: data.title, preview: "lol" }),
+        encryptedContent: data.excerpt,
+      }),
+    });
+    const pj = await hashes.json();
+    console.log(pj);
+    console.log(data);
+  };
 
   const { config } = usePrepareContractWrite({
     address: "0x9159574681A238230C233a93BA6249593dd9788e",
@@ -116,40 +127,61 @@ const CreatePost = () => {
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
-  //   const onClickEncryptImage = async (data: object) => {
-  //     const fileString = JSON.stringify(data);
+  const onClickEncryptImage = async (data: object) => {
+    const fileString = JSON.stringify(data);
 
-  //     console.log("fileInBase64:", fileString);
+    const accessControlConditions: any = [
+      {
+        contractAddress: "",
+        standardContractType: "",
+        chain: "ethereum",
+        method: "eth_getBalance",
+        parameters: [":userAddress", "latest"],
+        returnValueTest: {
+          comparator: ">=",
+          value: "1000000000000", // 0.000001 ETH
+        },
+      },
+    ];
 
-  //     const chain = "ethereum";
+    /* const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
+      accessControlConditions: accessControlConditions.accessControlConditions,
+      symmetricKey,
+      authSig,
+      chain,
+    }); */
 
-  //     const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
+    //console.log("encryptedString:", encryptedString);
 
-  //     // Visit here to understand how to encrypt static content
-  //     // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
-  //     const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(
-  //       fileString
-  //     );
+    //     const chain = "ethereum";
 
-  //     const accessControlConditions: any = {};
+    //     const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
 
-  //     const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
-  //       accessControlConditions: accessControlConditions.accessControlConditions,
-  //       symmetricKey,
-  //       authSig,
-  //       chain,
-  //     });
+    //     // Visit here to understand how to encrypt static content
+    //     // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
+    //     const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(
+    //       fileString
+    //     );
 
-  //     console.log("encryptedString:", encryptedString);
+    //     const accessControlConditions: any = {};
 
-  //     const encryptedStringInDataURI: any = await blobToDataURI(encryptedString);
+    //     const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
+    //       accessControlConditions: accessControlConditions.accessControlConditions,
+    //       symmetricKey,
+    //       authSig,
+    //       chain,
+    //     });
 
-  //     console.log("encryptedStringInDataURI:", encryptedStringInDataURI);
+    //     console.log("encryptedString:", encryptedString);
 
-  //     setEncryptedData(encryptedStringInDataURI);
+    //     const encryptedStringInDataURI: any = await blobToDataURI(encryptedString);
 
-  //     setEncryptedSymmetricKey(encryptedSymmetricKey);
-  //   };
+    //     console.log("encryptedStringInDataURI:", encryptedStringInDataURI);
+
+    //     setEncryptedData(encryptedStringInDataURI);
+
+    //     setEncryptedSymmetricKey(encryptedSymmetricKey);
+  };
 
   //   const onFetchEncryptedData = async () => {
   //     const downloadUrl = "https://arweave.net/" + txId;
@@ -277,8 +309,8 @@ const CreatePost = () => {
             </div>
 
             <button
-              //   type="submit"
-              onClick={() => write?.()}
+              type="submit"
+              //   onClick={() => write?.()}
               className="btn btn-primary w-full"
             >
               Post Article
