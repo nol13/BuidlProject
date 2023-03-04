@@ -5,7 +5,7 @@ import Post from "../../components/post";
 export default function User() {
   return (
     <div className="container flex flex-col gap-4 m-auto card">
-      <div className="stats shadow">
+      <div className="stats shadow mx-auto">
         <div className="stat">
           <div className="stat-figure text-primary">
             <svg
@@ -56,9 +56,9 @@ export default function User() {
               </div>
             </div>
           </div>
-          <div className="stat-value">86%</div>
-          <div className="stat-title">Tasks done</div>
-          <div className="stat-desc text-secondary">31 tasks remaining</div>
+          <div className="stat-title">made</div>
+          <div className="stat-value">4.337 ETH</div>
+          <div className="stat-desc ">revenue</div>
         </div>
       </div>
       <div className="container flex flex-col gap-4 m-auto max-w-prose">

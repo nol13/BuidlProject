@@ -11,8 +11,7 @@ export default async function handler(req, res) {
 
   // create a Web3 instance
 
-  const posts = await contract.methods.posts(4).call();
-  console.log(posts);
+  const posts = await contract.methods.posts(2).call();
 
   res.status(200).json(posts);
 }
