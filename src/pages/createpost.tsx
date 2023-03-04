@@ -268,14 +268,14 @@ const CreatePost = () => {
         <>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col items-center space-y-6 max-w-prose mx-auto"
+            className="flex flex-col items-center space-y-6 max-w-prose mx-auto "
           >
             {isLoadingRead && <div>Check Wallet</div>}
             {isSuccessRead && (
               <div>Transaction: {JSON.stringify(dataRead)}</div>
             )}
 
-            <p className="text-4xl">Submit your article</p>
+            <p className="text-4xl mr-20">Submit your article</p>
             <div className="w-full flex flex-col">
               <label>
                 <span className="label-text text-2xl">Title</span>
