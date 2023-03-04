@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import UserAvatar from "../../components/userAvatar";
 import PostModal from "../../components/postModal";
 import { HandThumbUpIcon, ShareIcon } from "@heroicons/react/24/outline";
+import { HandThumbUpIcon as HandThumbUpIconSolid } from "@heroicons/react/24/solid";
+
 import { useScroll, motion } from "framer-motion";
 
 type Posts = {
@@ -18,7 +20,7 @@ const UserPosts: React.FC<Posts> = () => {
       <motion.div
         className=" z-50 fixed -inset-0
         h-1
-        bg-red-400 rounded-full"
+        bg-red-400 dark:bg-red-900 rounded-full"
         style={{ scaleX: scrollYProgress }}
       />
       <div className="container flex flex-col gap-4 m-auto max-w-prose card">
@@ -26,11 +28,14 @@ const UserPosts: React.FC<Posts> = () => {
           <div className="card-actions mt-10 items-center justify-between mb-4">
             <UserAvatar />
             <div className="buttons flex gap-4 items-end ">
-              <HandThumbUpIcon className="h-6 w-6 text-gray-500" />
-              <ShareIcon className="h-6 w-6 text-gray-500" />
+              <label className="swap">
+                <input type="checkbox" />
+                <HandThumbUpIcon className="h-6 w-6 text-gray-500 swap-off" />
+                <HandThumbUpIconSolid className="h-6 w-6 text-gray-500 swap-on" />
+              </label>
             </div>
           </div>
-          <h2 className="card-title m-auto">Article Title</h2>
+          <h2 className="card-title m-auto pb-4">Article Title</h2>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Aenean

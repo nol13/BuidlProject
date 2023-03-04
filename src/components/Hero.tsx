@@ -1,12 +1,13 @@
 import { ConnectKitButton } from "connectkit";
 import Image from "next/image";
 import logo from "../assets/logo.png";
+import icon from "../assets/icon.png";
 
 export default function Hero() {
   return (
     <div className="hero h-screen overflow-hidden ">
       <div className="hero-content flex-col lg:flex-row">
-        <Image src={logo} alt="hero" className="max-w-xs rounded-lg " />
+        <Image src={icon} alt="logo" width={300} height={300} />
         <div>
           <h1 className="text-5xl font-bold">Get your Articles on-chain!</h1>
           <p className="py-6">
