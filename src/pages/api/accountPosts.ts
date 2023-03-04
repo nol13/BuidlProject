@@ -17,9 +17,7 @@ export default async function handler(
 
   // create a Web3 instance
 
-  const posts = await contract.methods
-    .postsByAddress("0xdF6c6eE5EBd58c7755e11e99B6c5eFA241d6737a")
-    .call();
+  const posts = await contract.methods.postsByAddress(user).call();
   console.log(posts);
   res.status(200).json(posts);
 }

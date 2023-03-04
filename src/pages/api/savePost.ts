@@ -1,14 +1,18 @@
 import Bundlr from "@bundlr-network/client";
 import { statSync } from "fs";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const data = JSON.parse(req.body);
   //console.log(typeof data.preview, typeof data.string);
   //res.status(200).json({ preview: "id1", content: "id2" });
   //return;
   const preview = data.preview;
   const encryptedContent = data.encryptedContent;
-
+  console.log(preview, encryptedContent);
   const bundlr = new Bundlr(
     "https://devnet.bundlr.network",
     "matic",
@@ -16,6 +20,7 @@ export default async function handler(req, res) {
     { providerUrl: "https://rpc-mumbai.maticvigil.com" }
   );
   await bundlr.ready();
+  console.log(bundlr.address);
   //console.log(`wallet address = ${bundlr.address}`, process.env.MUMBAI_KEY);
 
   //const dataSizeToCheck = 104860600;
