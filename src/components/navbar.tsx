@@ -1,6 +1,4 @@
-import { ConnectKitButton } from "connectkit";
-import { useAccount } from "wagmi";
-import { useEffect } from "react";
+import { Web3Button } from "@web3modal/react";
 import Link from "next/link";
 import Image from "next/image";
 import icon from "../assets/icon.png";
@@ -33,7 +31,7 @@ const Navbar = () => {
           <p className="invisible sm:visible">Create an article</p>
         </div>
       </Link>
-      <ConnectKitButton />
+      <Web3Button icon="hide" />
     </div>
   );
 };

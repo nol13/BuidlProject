@@ -1,8 +1,18 @@
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 import avatarimg from "../../assets/avatarimg.jpeg";
 import Post from "../../components/post";
+import axios from "axios";
 
-export default function User() {
+type PostProps = {
+  post: {
+    price: number;
+    creator: `0x${string}`;
+    previewHash: string;
+  };
+};
+
+export default function User({ post }: PostProps) {
   return (
     <div className="container flex flex-col gap-4 m-auto card">
       <div className="stats shadow mx-auto">
@@ -62,12 +72,21 @@ export default function User() {
         </div>
       </div>
       <div className="container flex flex-col gap-4 m-auto max-w-prose">
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
+        <Post post={post} />
+        <Post post={post} />
+        <Post post={post} />
+        <Post post={post} />
       </div>
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const post = await axios.get("http://localhost:3000/api/post");
+
+  return {
+    props: {
+      post: post.data,
+    },
+  };
+};

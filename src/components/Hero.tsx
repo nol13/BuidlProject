@@ -1,7 +1,7 @@
-import { ConnectKitButton } from "connectkit";
 import Image from "next/image";
 import logo from "../assets/logo.png";
 import icon from "../assets/icon.png";
+import { Web3Button } from "@web3modal/react";
 
 export default function Hero() {
   return (
@@ -16,7 +16,7 @@ export default function Hero() {
             eveniet debitis nihil, rerum fugit at odio dolores nostrum
             blanditiis praesentium!
           </p>
-          <ConnectKitButton />
+          <Web3Button />
         </div>
       </div>
     </div>

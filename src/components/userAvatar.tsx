@@ -4,10 +4,19 @@ import avatarimg from "../assets/avatarimg.jpeg";
 import { shortAddress } from "../helpers/shortAddress";
 import Link from "next/link";
 
-export default function UserAvatar() {
-  const address = shortAddress("0xA0Cf798816D4b9b986z6b5330EEa46a18382f251e");
+type UserProps = {
+  address: `0x${string}`;
+};
 
-  const { data: ensName, isError, isLoading } = useEnsName();
+export default function UserAvatar({ address }: UserProps) {
+  const {
+    data: ensName,
+    isError,
+    isSuccess,
+  } = useEnsName({
+    address: address,
+    chainId: 1,
+  });
 
   return (
     <Link href={"/user/10"}>
@@ -17,7 +26,7 @@ export default function UserAvatar() {
             <Image src={avatarimg} alt=" avatar image" />
           </div>
         </div>
-        <div className="p-2">{address}</div>
+        <div className="p-2">{ensName ? ensName : shortAddress(address)}</div>
       </div>
     </Link>
   );

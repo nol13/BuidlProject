@@ -97,7 +97,12 @@ const CreatePost = () => {
     args: ["123", "456", getValues("price")],
   });
 
-  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+  const {
+    data: datawrite,
+    isLoading,
+    isSuccess,
+    write,
+  } = useContractWrite(config);
 
   //   const onClickEncryptImage = async (data: object) => {
   //     const fileString = JSON.stringify(data);
