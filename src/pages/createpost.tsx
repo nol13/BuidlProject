@@ -106,12 +106,12 @@ const CreatePost = () => {
       }),
     });
     hashes.json().then((pj) => {
-      console.log("pj from .then", pj);
-      console.log("data from .then", data);
+      //   console.log("pj from .then", pj);
+      //   console.log("data from .then", data);
       setContentHash(pj.content);
-      console.log("contentHash", contentHash);
+      //   console.log("contentHash", contentHash);
       setPreviewHash(pj.preview);
-      // use the config value here
+      //   console.log("previewHash", previewHash);
     });
   };
 
