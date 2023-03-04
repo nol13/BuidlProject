@@ -16,15 +16,15 @@ export default async function handler(req, res) {
     { providerUrl: "https://rpc-mumbai.maticvigil.com" }
   );
   await bundlr.ready();
-  console.log(`wallet address = ${bundlr.address}`, process.env.MUMBAI_KEY);
+  //console.log(`wallet address = ${bundlr.address}`, process.env.MUMBAI_KEY);
 
-  const dataSizeToCheck = 104860600;
-  const price1MBAtomic = await bundlr.getPrice(dataSizeToCheck);
-  let atomicBalance = await bundlr.getLoadedBalance();
-  console.log(1313311, atomicBalance);
-  let response = await bundlr.fund(price1MBAtomic);
+  //const dataSizeToCheck = 104860600;
+  //const price1MBAtomic = await bundlr.getPrice(dataSizeToCheck);
+  //let atomicBalance = await bundlr.getLoadedBalance();
+  //console.log(1313311, atomicBalance)
+  //let response = await bundlr.fund(price1MBAtomic);
 
-  // const bundlr = new Bundlr(data.node, data.currency, data.jwk);
+  //const bundlr = new Bundlr(data.node, data.currency, data.jwk);
 
   const savePreview = async () => {
     const tx1 = bundlr.createTransaction(preview);
