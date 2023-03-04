@@ -7,15 +7,16 @@ type PostProps = {
   post: {
     price: number;
     creator: `0x${string}`;
-    previewHash: string;
+    preview: string;
+    title: string;
   };
 };
 export default function Post({ post }: PostProps) {
   return (
     <div className="card card-compact gap-50  bg-slate-50 dark:bg-[#383838]">
       <div className="card-body">
-        <h2 className="card-title m-auto">Article Title</h2>
-        <p>{post.previewHash}</p>
+        <h2 className="card-title m-auto">{post.title}</h2>
+        <p>{post.preview}</p>
         <div className="card-actions mt-10 items-center justify-between">
           <UserAvatar address={post.creator} />
           <div className="buttons flex gap-4 items-end ">

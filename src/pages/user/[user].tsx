@@ -1,18 +1,23 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Image from "next/image";
 import avatarimg from "../../assets/avatarimg.jpeg";
 import Post from "../../components/post";
 import axios from "axios";
 
-type PostProps = {
-  post: {
-    price: number;
-    creator: `0x${string}`;
-    previewHash: string;
-  };
+type post = {
+  id: number;
+  price: number;
+  creator: `0x${string}`;
+  title: string;
+  preview: string;
 };
 
-export default function User({ post }: PostProps) {
+type PostProps = {
+  posts: post[];
+};
+
+export default function User({ posts }: PostProps) {
+  console.log(posts);
   return (
     <div className="container flex flex-col gap-4 m-auto card">
       <div className="stats shadow mx-auto">
@@ -72,21 +77,58 @@ export default function User({ post }: PostProps) {
         </div>
       </div>
       <div className="container flex flex-col gap-4 m-auto max-w-prose">
-        <Post post={post} />
-        <Post post={post} />
-        <Post post={post} />
-        <Post post={post} />
+        {posts.map((post) => {
+          console.log(post);
+          return <Post key={post.id} post={post} />;
+        })}
       </div>
     </div>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const post = await axios.get("http://localhost:3000/api/post");
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+}: GetServerSidePropsContext) => {
+  const user = params?.user;
 
+  const res = await axios.get("http://localhost:3000/api/accountPosts", {
+    params: { user },
+  });
+
+  const posts = [];
+  for (const id of res.data) {
+    const data = await axios.get("http://localhost:3000/api/post", {
+      params: { postId: id },
+    });
+    console.log(data.data);
+    let hashPreview = data.data.previewHash;
+    console.log(hashPreview);
+    let preview;
+    try {
+      preview = await axios.get("https://arweave.net/" + hashPreview);
+      console.log(preview.data);
+    } catch (error) {
+      preview = {
+        data: {
+          title: "AAA",
+          preview: "BBB",
+        },
+      };
+      console.log(preview.data.title);
+    }
+    const post = {
+      id: id,
+      price: data.data.price,
+      creator: data.data.creator,
+      title: preview.data.title || "No Title",
+      preview: preview.data.title || "No Preview",
+    };
+    posts.push(post);
+  }
+  console.log(posts);
   return {
     props: {
-      post: post.data,
+      posts: posts,
     },
   };
 };
