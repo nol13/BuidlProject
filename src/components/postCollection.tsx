@@ -9,12 +9,12 @@ type post = {
   preview: string;
 };
 
+
 type PostProps = {
   posts: post[];
 };
 
 export default function PostCollection({ posts }: PostProps) {
-  console.log(posts);
 
   return (
     <div className="container flex flex-col m-auto gap-4 max-w-prose">

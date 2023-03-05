@@ -5,7 +5,7 @@ import { shortAddress } from "../helpers/shortAddress";
 import Link from "next/link";
 
 type UserProps = {
-  address: `0x${string}`;
+  address: `${string}`;
 };
 
 export default function UserAvatar({ address }: UserProps) {
@@ -14,6 +14,7 @@ export default function UserAvatar({ address }: UserProps) {
     isError,
     isSuccess,
   } = useEnsName({
+    //@ts-ignore
     address: address,
     chainId: 1,
   });

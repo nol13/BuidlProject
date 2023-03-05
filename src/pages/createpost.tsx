@@ -154,115 +154,11 @@ const CreatePost = () => {
         parameters: [":userAddress", "latest"],
         returnValueTest: {
           comparator: ">=",
-          value: "1000000000000", // 0.000001 ETH
+          value: "0", // 0.000001 ETH
         },
       },
     ];
-
-    /* const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
-      accessControlConditions: accessControlConditions.accessControlConditions,
-      symmetricKey,
-      authSig,
-      chain,
-    }); */
-
-    //console.log("encryptedString:", encryptedString);
-
-    //     const chain = "ethereum";
-
-    //     const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
-
-    //     // Visit here to understand how to encrypt static content
-    //     // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
-    //     const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(
-    //       fileString
-    //     );
-
-    //     const accessControlConditions: any = {};
-
-    //     const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
-    //       accessControlConditions: accessControlConditions.accessControlConditions,
-    //       symmetricKey,
-    //       authSig,
-    //       chain,
-    //     });
-
-    //     console.log("encryptedString:", encryptedString);
-
-    //     const encryptedStringInDataURI: any = await blobToDataURI(encryptedString);
-
-    //     console.log("encryptedStringInDataURI:", encryptedStringInDataURI);
-
-    //     setEncryptedData(encryptedStringInDataURI);
-
-    //     setEncryptedSymmetricKey(encryptedSymmetricKey);
   };
-
-  //   const onFetchEncryptedData = async () => {
-  //     const downloadUrl = "https://arweave.net/" + txId;
-
-  //     const data = await fetch(downloadUrl);
-
-  //     const encryptedData = JSON.parse(await data.text());
-
-  //     console.log("encryptedData:", encryptedData);
-
-  //     setDownloadedEncryptedData(encryptedData);
-  //   };
-
-  //
-  // (LIT) Decrypt downloaded encrypted data
-  // @return { void }
-  //
-  //   const onDecryptDownloadedData = async (downloadedEncryptedData: any) => {
-
-  //     const authSig = await LitJsSdk.checkAndSignAuthMessage({chain: 'ethereum'})
-
-  //     const symmetricKey = await litNodeClient.getEncryptionKey({
-  //       accessControlConditions: downloadedEncryptedData.accessControlConditions,
-  //       // Note, below we convert the encryptedSymmetricKey from a UInt8Array to a hex string.  This is because we obtained the encryptedSymmetricKey from "saveEncryptionKey" which returns a UInt8Array.  But the getEncryptionKey method expects a hex string.
-  //       toDecrypt: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16"),
-  //       chain: 'ethereum',
-  //       authSig,
-  //     });
-
-  //     const decryptedString = await LitJsSdk.decryptString(
-  //       dataURItoBlob(downloadedEncryptedData.encryptedData),
-  //       symmetricKey
-  //     );
-
-  //     const originalFormat = atob(decryptedString);
-
-  //     console.log("Original Format:", originalFormat);
-
-  //     setDecryptedData(originalFormat);
-
-  //   }
-
-  //   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-
-  //     // encrypt data hete
-
-  //     let _JWK = data
-  //     console.log("JWK:", _JWK);
-
-  //     setJWK(_JWK);
-
-  //     // arweave will be dealth from backend
-  //     const res = await fetch('./api/arweave', {
-  //       method: 'POST',
-  //       body: JSON.stringify({
-  //         currency,
-  //         node,
-  //         jwk: _JWK,
-  //       })
-  //     });
-
-  //     const _arweaveAddress = (await res.json()).address;
-
-  //     setArweaveAddress(_arweaveAddress);
-
-  //   };
 
   return (
     <>
@@ -317,19 +213,53 @@ const CreatePost = () => {
               </label>
               <input
                 type="text"
-                placeholder="METIS"
+                placeholder="MATIC"
                 className="input input-primary w-1/3 input-lg"
                 {...register("price")}
               />
             </div>
-
-            <button
-              type="submit"
-              onClick={() => write?.()}
-              className="btn btn-primary w-full"
-            >
-              Post Article
-            </button>
+            {isLoading ? (
+              <button
+                type="submit"
+                onClick={() => write?.()}
+                className="btn btn-primary w-full"
+              >
+                <div className="flex items-center space-x-1">
+                  <p>Posting Article</p>
+                  <div>
+                    <svg
+                      className="animate-spin"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="21px"
+                      height="21px"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        opacity="0.2"
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                        fill="#000000"
+                      />
+                      <path
+                        d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z"
+                        fill="#000000"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </button>
+            ) : (
+              <button
+                type="submit"
+                onClick={() => write?.()}
+                className="btn btn-primary w-full"
+              >
+                <div></div>
+                Post Article
+              </button>
+            )}
           </form>
         </>
       ) : (

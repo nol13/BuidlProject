@@ -13,6 +13,9 @@ type PostProps = {
   post: {
     creator: `0x${string}`;
     content: string;
+    price: number;
+    contentHash: string;
+    previewHash: string;
   };
 };
 

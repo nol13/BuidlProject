@@ -7,7 +7,7 @@ import BuyValidation from "./buyValidation";
 type PostProps = {
   post: {
     price: number;
-    creator: `0x${string}`;
+    creator: `${string}`;
     preview: string;
     title: string;
     id: string;
