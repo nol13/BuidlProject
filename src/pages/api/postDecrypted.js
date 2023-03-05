@@ -2,26 +2,27 @@ import Simple from "../../contractInfo/contract-addressBdl.json";
 import Web3 from "web3";
 import axios from "axios";
 import LitJsSdk from "lit-js-sdk";
+import {Blob} from 'node:buffer';
 
 const chain = "mumbai"
 
 function b64toBlob(dataURI) {
 
-    return Buffer.from("H2gmAteQletDqRQqUMZ+N92H+ucVOXXRzqGtNzfIjBM=", "base64");
+    //return Buffer.from("H2gmAteQletDqRQqUMZ+N92H+ucVOXXRzqGtNzfIjBM=", "base64");
     
-    /* var byteString = atob();
+    var byteString = atob(dataURI);
     var ab = new ArrayBuffer(byteString.length);
     var ia = new Uint8Array(ab);
     
     for (var i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
     }
-    return new Blob([ab], { type: 'application/octet-stream' }); */
+    return new Blob([ab], { type: 'application/octet-stream' });
 
 }
 
 const litSDK = new LitJsSdk.LitNodeClient();
-litSDK.connect();
+  litSDK.connect();
 
 export default async function handler(req, res) {
   //const postId = req.query.postId;
@@ -32,7 +33,7 @@ export default async function handler(req, res) {
   );
   const contract = new web3.eth.Contract(contractAbi.abi, Simple.Simple);
 
- 
+  
 
   // create a Web3 instance
 
@@ -63,20 +64,19 @@ export default async function handler(req, res) {
 
 
 
-
-  const decrypted64 = b64toBlob("MQ1jImwxXBx7L…O/NaIvP7LID1wuuhVWIdPrQpZPZg65GDKDegDTSX+xH+6Aw==")
+  const decrypted64 = "MQ1jImwxXBx7L…O/NaIvP7LID1wuuhVWIdPrQpZPZg65GDKDegDTSX+xH+6Aw=="
 
   const blobContent = await b64toBlob(decrypted64);
 
-  const symmetricKey = await litSDK.getEncryptionKey({
+  const symmetricKey = await litSDK.current.getEncryptionKey({
     accessControlConditions,
     toDecrypt: "58700c72e794465b6882676b4726108728d717e8c645d6d4350230336c63d2aceaf577b7626f6a85069d66785d2e7b0ae22f4a871d0226ac7e93467a5b2aa1f97ede1297ed79f5d67bbfdf7624522d39230a6ebe0bebdfe98c3d29629b7006a0178b7884bc3df7c2a883b1f5ddbfa9a224ec5303b2b7023c29ed54fb8b10e26b00000000000000209b45a957a15db446f862707a6baabfce86f7d09679dea86b07df1a8fda637b9bddc861726c33362297c67414073b1db9",
-    chain,
+    chain: 'mumbai',
     authSig,
   });
 
   const decryptedString = await LitJsSdk.decryptString(
-    decrypted64,
+    b64toBlob(decrypted64),
     symmetricKey
   );
 
