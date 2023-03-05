@@ -118,7 +118,7 @@ const CreatePost = () => {
   };
 
   const { config } = usePrepareContractWrite({
-    address: "0x9159574681A238230C233a93BA6249593dd9788e",
+    address: "0x758b58fB346B3Ce8ec9Fc57b53C48091855b8C55",
     abi: abi,
     functionName: "createPost",
     args: [contentHash, previewHash, getValues("price")],
@@ -130,7 +130,7 @@ const CreatePost = () => {
     isLoading: isLoadingRead,
     isSuccess: isSuccessRead,
   } = useContractRead({
-    address: "0x9159574681A238230C233a93BA6249593dd9788e",
+    address: "0x758b58fB346B3Ce8ec9Fc57b53C48091855b8C55",
     abi: abi,
     functionName: "createPost",
   });

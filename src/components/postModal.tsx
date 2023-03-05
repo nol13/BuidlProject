@@ -14,10 +14,10 @@ export default function PostModal({ price, id }: ModalProps) {
     abi: abi,
     functionName: "purchasePost",
     args: [address, id],
-    overrides: {
-      from: address,
-      value: price,
-    },
+    // overrides: {
+    //   from: address,
+    //   value: price,
+    // },
   });
 
   const {
