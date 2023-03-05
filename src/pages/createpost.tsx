@@ -158,8 +158,6 @@ const CreatePost = () => {
         },
       },
     ];
-
-
   };
 
   return (
@@ -215,7 +213,7 @@ const CreatePost = () => {
               </label>
               <input
                 type="text"
-                placeholder="METIS"
+                placeholder="MATIC"
                 className="input input-primary w-1/3 input-lg"
                 {...register("price")}
               />
