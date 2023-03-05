@@ -12,7 +12,7 @@ type PostProps = {
     id: string;
   };
 };
-export default function Post({ post, id }: PostProps) {
+export default function Post({ post }: PostProps) {
   return (
     <div className="card card-compact gap-50  bg-slate-50 dark:bg-[#383838]">
       <div className="card-body">

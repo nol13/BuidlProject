@@ -34,7 +34,6 @@ export default function PostModal({ price, id }: ModalProps) {
         Price:
         <div className="badge">{price}ETH</div>
       </label>
-      {error?.message}
       <input type="checkbox" id="modal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box relative">
