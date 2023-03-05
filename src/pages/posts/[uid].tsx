@@ -11,10 +11,8 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
 type PostProps = {
   post: {
-    price: number;
     creator: `0x${string}`;
-    contentHash: string;
-    previewHash: string;
+    content: string;
   };
 };
 
@@ -44,7 +42,7 @@ const UserPosts = ({ post }: PostProps) => {
             </div>
           </div>
           <h2 className="card-title m-auto pb-4">Article Title</h2>
-          <p>{post.contentHash}</p>
+          <p>{post.content}</p>
         </div>
       </div>
     </div>
@@ -56,14 +54,20 @@ export const getServerSideProps: GetServerSideProps = async ({
 }: GetServerSidePropsContext) => {
   const id = params?.uid;
   console.log(id);
-  const post = await axios.get("http://localhost:3000/api/post", {
+  const postres = await axios.get("http://localhost:3000/api/post", {
     params: { postId: id },
   });
-  console.log(post.data);
-
+  const contentHash = postres.data.contentHash;
+  const content = await axios.get("https://arweave.net/" + contentHash);
+  console.log(content);
+  const post = {
+    creator: postres.data.creator,
+    content: content.data,
+  };
+  console.log(post);
   return {
     props: {
-      post: post.data,
+      post: post,
     },
   };
 };
