@@ -14,6 +14,7 @@ type PostProps = {
   };
 };
 export default function Post({ post }: PostProps) {
+  console.log(post);
   return (
     <div className="card card-compact gap-50  bg-slate-50 dark:bg-[#383838]">
       <div className="card-body">

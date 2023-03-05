@@ -118,7 +118,7 @@ const CreatePost = () => {
   };
 
   const { config } = usePrepareContractWrite({
-    address: "0x758b58fB346B3Ce8ec9Fc57b53C48091855b8C55",
+    address: "0x9881EcCf30816f6723486e0C032cba53c3708071",
     abi: abi,
     functionName: "createPost",
     args: [contentHash, previewHash, getValues("price")],
@@ -130,7 +130,7 @@ const CreatePost = () => {
     isLoading: isLoadingRead,
     isSuccess: isSuccessRead,
   } = useContractRead({
-    address: "0x758b58fB346B3Ce8ec9Fc57b53C48091855b8C55",
+    address: "0x9881EcCf30816f6723486e0C032cba53c3708071",
     abi: abi,
     functionName: "createPost",
   });
@@ -213,7 +213,11 @@ const CreatePost = () => {
               </label>
               <input
                 type="text"
+<<<<<<< HEAD
                 placeholder="MATIC"
+=======
+                placeholder="Matic"
+>>>>>>> da87f2ec456ddd1bd1b15a3acb81ffefe314e1a9
                 className="input input-primary w-1/3 input-lg"
                 {...register("price")}
               />

@@ -120,7 +120,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       price: data.data.price,
       creator: data.data.creator,
       title: preview.data.title || "No Title",
-      preview: preview.data.title || "No Preview",
+      preview: preview.data.preview || "No Preview",
     };
     posts.push(post);
   }
