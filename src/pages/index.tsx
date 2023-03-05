@@ -29,8 +29,7 @@ function Page({ posts }: PostProps) {
 export default Page;
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const ids = ["1", "2", "3", "4", "5"];
-  console.log(ids);
+  const ids = ["1", "2", "3", "4"];
 
   const posts = [];
   for (const id of ids) {
@@ -59,7 +58,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       price: data.data.price,
       creator: data.data.creator,
       title: preview.data.title || "No Title",
-      preview: preview.data.title || "No Preview",
+      preview: preview.data.preview || "No Preview",
     };
     console.log(post);
     posts.push(post);

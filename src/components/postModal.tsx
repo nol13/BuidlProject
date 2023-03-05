@@ -10,7 +10,7 @@ export default function PostModal({ price, id }: ModalProps) {
   const { address } = useAccount();
 
   const { config, error } = usePrepareContractWrite({
-    address: "0x758b58fB346B3Ce8ec9Fc57b53C48091855b8C55",
+    address: "0x9881EcCf30816f6723486e0C032cba53c3708071",
     abi: abi,
     functionName: "purchasePost",
     args: [address, id],
