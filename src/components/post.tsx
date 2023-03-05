@@ -2,6 +2,7 @@ import UserAvatar from "./userAvatar";
 import PostModal from "./postModal";
 import { HandThumbUpIcon, ShareIcon } from "@heroicons/react/24/outline";
 import { HandThumbUpIcon as HandThumbUpIconSolid } from "@heroicons/react/24/solid";
+import BuyValidation from "./buyValidation";
 
 type PostProps = {
   post: {
@@ -21,7 +22,7 @@ export default function Post({ post }: PostProps) {
         <div className="card-actions mt-10 items-center justify-between">
           <UserAvatar address={post.creator} />
           <div className="buttons flex gap-4 items-end ">
-            <PostModal id={post.id} price={post.price} />
+            <BuyValidation id={post.id} price={post.price} />
             <label className="swap">
               <input type="checkbox" />
               <HandThumbUpIcon className="h-6 w-6 text-gray-500 swap-off" />

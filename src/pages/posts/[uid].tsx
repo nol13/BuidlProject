@@ -7,7 +7,7 @@ import { HandThumbUpIcon as HandThumbUpIconSolid } from "@heroicons/react/24/sol
 import axios from "axios";
 
 import { useScroll, motion } from "framer-motion";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
 type PostProps = {
   post: {
@@ -51,8 +51,15 @@ const UserPosts = ({ post }: PostProps) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const post = await axios.get("http://localhost:3000/api/post");
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+}: GetServerSidePropsContext) => {
+  const id = params?.uid;
+  console.log(id);
+  const post = await axios.get("http://localhost:3000/api/post", {
+    params: { postId: id },
+  });
+  console.log(post.data);
 
   return {
     props: {

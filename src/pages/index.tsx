@@ -29,7 +29,7 @@ function Page({ posts }: PostProps) {
 export default Page;
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const ids = ["1", "2", "3", "4"];
+  const ids = ["1", "2", "3", "4", "5"];
   console.log(ids);
 
   const posts = [];
