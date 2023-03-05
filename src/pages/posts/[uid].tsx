@@ -12,7 +12,7 @@ import { GetServerSideProps } from "next";
 type PostProps = {
   post: {
     price: number;
-    creator: `0x${string}`;
+    creator: `${string}`;
     contentHash: string;
     previewHash: string;
   };

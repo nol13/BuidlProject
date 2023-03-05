@@ -7,7 +7,7 @@ import axios from "axios";
 type post = {
   id: number;
   price: number;
-  creator: `0x${string}`;
+  creator: `${string}`;
   title: string;
   preview: string;
 };

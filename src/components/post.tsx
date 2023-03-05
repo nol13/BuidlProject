@@ -6,7 +6,7 @@ import { HandThumbUpIcon as HandThumbUpIconSolid } from "@heroicons/react/24/sol
 type PostProps = {
   post: {
     price: number;
-    creator: `0x${string}`;
+    creator: `${string}`;
     preview: string;
     title: string;
   };
@@ -20,7 +20,7 @@ export default function Post({ post }: PostProps) {
         <div className="card-actions mt-10 items-center justify-between">
           <UserAvatar address={post.creator} />
           <div className="buttons flex gap-4 items-end ">
-            <PostModal price={post.price} />
+            <PostModal id="myModal" price={post.price} />
             <label className="swap">
               <input type="checkbox" />
               <HandThumbUpIcon className="h-6 w-6 text-gray-500 swap-off" />
