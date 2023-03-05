@@ -213,11 +213,7 @@ const CreatePost = () => {
               </label>
               <input
                 type="text"
-<<<<<<< HEAD
-                placeholder="MATIC"
-=======
                 placeholder="Matic"
->>>>>>> da87f2ec456ddd1bd1b15a3acb81ffefe314e1a9
                 className="input input-primary w-1/3 input-lg"
                 {...register("price")}
               />
