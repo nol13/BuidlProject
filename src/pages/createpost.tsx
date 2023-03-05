@@ -154,115 +154,13 @@ const CreatePost = () => {
         parameters: [":userAddress", "latest"],
         returnValueTest: {
           comparator: ">=",
-          value: "1000000000000", // 0.000001 ETH
+          value: "0", // 0.000001 ETH
         },
       },
     ];
 
-    /* const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
-      accessControlConditions: accessControlConditions.accessControlConditions,
-      symmetricKey,
-      authSig,
-      chain,
-    }); */
 
-    //console.log("encryptedString:", encryptedString);
-
-    //     const chain = "ethereum";
-
-    //     const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
-
-    //     // Visit here to understand how to encrypt static content
-    //     // https://developer.litprotocol.com/docs/LitTools/JSSDK/staticContent
-    //     const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(
-    //       fileString
-    //     );
-
-    //     const accessControlConditions: any = {};
-
-    //     const encryptedSymmetricKey = await litNodeClient.saveEncryptionKey({
-    //       accessControlConditions: accessControlConditions.accessControlConditions,
-    //       symmetricKey,
-    //       authSig,
-    //       chain,
-    //     });
-
-    //     console.log("encryptedString:", encryptedString);
-
-    //     const encryptedStringInDataURI: any = await blobToDataURI(encryptedString);
-
-    //     console.log("encryptedStringInDataURI:", encryptedStringInDataURI);
-
-    //     setEncryptedData(encryptedStringInDataURI);
-
-    //     setEncryptedSymmetricKey(encryptedSymmetricKey);
   };
-
-  //   const onFetchEncryptedData = async () => {
-  //     const downloadUrl = "https://arweave.net/" + txId;
-
-  //     const data = await fetch(downloadUrl);
-
-  //     const encryptedData = JSON.parse(await data.text());
-
-  //     console.log("encryptedData:", encryptedData);
-
-  //     setDownloadedEncryptedData(encryptedData);
-  //   };
-
-  //
-  // (LIT) Decrypt downloaded encrypted data
-  // @return { void }
-  //
-  //   const onDecryptDownloadedData = async (downloadedEncryptedData: any) => {
-
-  //     const authSig = await LitJsSdk.checkAndSignAuthMessage({chain: 'ethereum'})
-
-  //     const symmetricKey = await litNodeClient.getEncryptionKey({
-  //       accessControlConditions: downloadedEncryptedData.accessControlConditions,
-  //       // Note, below we convert the encryptedSymmetricKey from a UInt8Array to a hex string.  This is because we obtained the encryptedSymmetricKey from "saveEncryptionKey" which returns a UInt8Array.  But the getEncryptionKey method expects a hex string.
-  //       toDecrypt: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16"),
-  //       chain: 'ethereum',
-  //       authSig,
-  //     });
-
-  //     const decryptedString = await LitJsSdk.decryptString(
-  //       dataURItoBlob(downloadedEncryptedData.encryptedData),
-  //       symmetricKey
-  //     );
-
-  //     const originalFormat = atob(decryptedString);
-
-  //     console.log("Original Format:", originalFormat);
-
-  //     setDecryptedData(originalFormat);
-
-  //   }
-
-  //   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-
-  //     // encrypt data hete
-
-  //     let _JWK = data
-  //     console.log("JWK:", _JWK);
-
-  //     setJWK(_JWK);
-
-  //     // arweave will be dealth from backend
-  //     const res = await fetch('./api/arweave', {
-  //       method: 'POST',
-  //       body: JSON.stringify({
-  //         currency,
-  //         node,
-  //         jwk: _JWK,
-  //       })
-  //     });
-
-  //     const _arweaveAddress = (await res.json()).address;
-
-  //     setArweaveAddress(_arweaveAddress);
-
-  //   };
 
   return (
     <>
