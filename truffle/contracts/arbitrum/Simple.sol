@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.9;
 
-import "../../node_modules/@openzeppelin/contracts/utils/Counters.sol";
-import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 
 contract Simple is Ownable {
     using Counters for Counters.Counter;
@@ -45,7 +46,7 @@ contract Simple is Ownable {
         bool disabled;
     }
 
-    // shouldnt need to store owned arrays once we have indexing setup?
+    // TODO: delete stuff that doesnt need to be stored onchain
     mapping(uint256 => address[]) public ownedByArray;
     mapping(uint256 => mapping(address => bool)) public ownedBy;
     mapping(uint256 => post) public posts;
@@ -159,7 +160,7 @@ contract Simple is Ownable {
         ownedBy[postId][purchaser] = true;
         postsOwned[purchaser][postId] = true;
 
-        ownedByArray[postId][ownedByArray[postId].length] = purchaser;
+        ownedByArray[postId].push(purchaser);
         postsOwnedArray[purchaser].push(postId);
 
         emit PostPurchased(purchaser, postId);
