@@ -20,7 +20,7 @@ export default function UserAvatar({ address }: UserProps) {
   });
 
   return (
-    <Link href={"/user/10"}>
+    <Link href={"/user/" + address}>
       <div className="flex justify-center items-center">
         <div className="avatar">
           <div className="w-10 rounded-full">
