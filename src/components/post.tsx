@@ -9,9 +9,10 @@ type PostProps = {
     creator: `0x${string}`;
     preview: string;
     title: string;
+    id: string;
   };
 };
-export default function Post({ post }: PostProps) {
+export default function Post({ post, id }: PostProps) {
   return (
     <div className="card card-compact gap-50  bg-slate-50 dark:bg-[#383838]">
       <div className="card-body">
@@ -20,7 +21,7 @@ export default function Post({ post }: PostProps) {
         <div className="card-actions mt-10 items-center justify-between">
           <UserAvatar address={post.creator} />
           <div className="buttons flex gap-4 items-end ">
-            <PostModal price={post.price} />
+            <PostModal id={post.id} price={post.price} />
             <label className="swap">
               <input type="checkbox" />
               <HandThumbUpIcon className="h-6 w-6 text-gray-500 swap-off" />
