@@ -10,7 +10,7 @@ export default function PostModal({ price, id }: ModalProps) {
   const { address } = useAccount();
 
   const { config, error } = usePrepareContractWrite({
-    address: "0x9159574681A238230C233a93BA6249593dd9788e",
+    address: "0x758b58fB346B3Ce8ec9Fc57b53C48091855b8C55",
     abi: abi,
     functionName: "purchasePost",
     args: [address, id],
@@ -19,6 +19,7 @@ export default function PostModal({ price, id }: ModalProps) {
       value: price,
     },
   });
+
   const {
     data: datawrite,
     isLoading,
@@ -26,12 +27,14 @@ export default function PostModal({ price, id }: ModalProps) {
     write,
   } = useContractWrite(config);
   console.log(address, id);
+
   return (
     <>
       <label htmlFor="modal" className="btn btn-xs gap-2">
         Price:
         <div className="badge">{price}ETH</div>
       </label>
+      {error?.message}
       <input type="checkbox" id="modal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box relative">

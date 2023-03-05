@@ -24,6 +24,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.3",
     "react-simple-wysiwyg": "^2.1.4",
+    "secp256k1": "^5.0.0",
     "slate-react": "^0.91.7",
     "theme-change": "^2.3.0",
     "wagmi": "^0.11.7",

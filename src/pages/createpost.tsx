@@ -17,6 +17,7 @@ import Script from "next/script";
 //@ts-ignore
 import LitJsSdk from "lit-js-sdk";
 import { FileReadResult } from "fs/promises";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
 type Inputs = {
   title: string;
@@ -98,6 +99,7 @@ const CreatePost = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log("data.articleText", data.articleText);
+
     const hashes = await fetch("/api/savePost", {
       method: "POST",
       body: JSON.stringify({
@@ -106,10 +108,10 @@ const CreatePost = () => {
       }),
     });
     hashes.json().then((pj) => {
-      //   console.log("pj from .then", pj);
-      //   console.log("data from .then", data);
+      console.log("pj from .then", pj);
+      console.log("data from .then", data);
       setContentHash(pj.content);
-      //   console.log("contentHash", contentHash);
+      console.log("contentHash", contentHash);
       setPreviewHash(pj.preview);
       //   console.log("previewHash", previewHash);
     });
