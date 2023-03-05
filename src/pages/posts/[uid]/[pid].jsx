@@ -1,27 +1,30 @@
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
 import { Account } from "../../../components/Account";
+import { useState, useEffect } from 'react'
 
 const Post = () => {
-  const { isConnected } = useAccount();
+    const { isConnected } = useAccount();
 
     const router = useRouter();
     const { uid, pid } = router.query;
     const [posts, setPosts] = useState([])
     const [bundleID, setBundleId] = useState([])
-    
-    const savePost = async () => {
-            
-        const posts = await fetch('/api/savePost', { method: "POST", body: JSON.stringify({preview: 5, encryptedContent: 'lol'})});
-        const pj = await posts.json();
-        console.log(pj)
-        setPosts(pj);
-    };
+
+
 
     useEffect(() => {
         const getPosts = async () => {
-            
-            const posts = await fetch('/api/post', { method: "POST"});
+
+            const contractAbi = require("../../contractInfo/Simple.json");
+            const web3 = new Web3(
+                `https://polygon-mumbai.g.alchemy.com/v2/KgZ9A1HFGOW4ylY9V2R1Pras_Xx6jseJ`
+            );
+            const contract = new web3.eth.Contract(contractAbi.abi, Simple.Simple);
+
+            const posts = await contract.methods.posts(postId).call();
+
+            //const posts = await fetch('/api/post', { method: "POST" });
             const pj = await posts.json();
             console.log(pj)
             setPosts(pj);
@@ -35,9 +38,9 @@ const Post = () => {
             <div>{isConnected && <Account />}</div>
             <div>uid: {uid} pid: {pid}</div>
 
-            <div onClick={savePost}>uid: {uid} pid: {pid}</div>
-    </div>
-  );
+            <div>uid: {uid} pid: {pid}</div>
+        </div>
+    );
 };
 
 export default Post;
