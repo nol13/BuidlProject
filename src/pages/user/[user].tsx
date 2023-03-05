@@ -5,7 +5,7 @@ import Post from "../../components/post";
 import axios from "axios";
 
 type post = {
-  id: number;
+  id: string;
   price: number;
   creator: `0x${string}`;
   title: string;
@@ -78,7 +78,6 @@ export default function User({ posts }: PostProps) {
       </div>
       <div className="container flex flex-col gap-4 m-auto max-w-prose">
         {posts.map((post) => {
-          console.log(post);
           return <Post key={post.id} post={post} />;
         })}
       </div>
