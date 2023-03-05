@@ -1,23 +1,40 @@
-import { usePrepareContractWrite, useContractWrite } from "wagmi";
+import { ethers } from "ethers";
+import { usePrepareContractWrite, useContractWrite, useAccount } from "wagmi";
 import { abi } from "../../contracts/Simple.json";
 
 type ModalProps = {
   price: number;
+  id: string;
 };
+export default function PostModal({ price, id }: ModalProps) {
+  const { address } = useAccount();
 
-export default function PostModal({ price }: ModalProps) {
   const { config, error } = usePrepareContractWrite({
-    // address: "0xecb504d39723b0be0e3a9aa33d646642d1051ee1",
+    address: "0x758b58fB346B3Ce8ec9Fc57b53C48091855b8C55",
     abi: abi,
     functionName: "purchasePost",
-    args: [],
+    args: [address, id],
+    // overrides: {
+    //   from: address,
+    //   value: price,
+    // },
   });
+
+  const {
+    data: datawrite,
+    isLoading,
+    isSuccess,
+    write,
+  } = useContractWrite(config);
+  console.log(address, id);
+
   return (
     <>
       <label htmlFor="modal" className="btn btn-xs gap-2">
         Price:
         <div className="badge">{price}ETH</div>
       </label>
+      {error?.message}
       <input type="checkbox" id="modal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box relative">
@@ -28,7 +45,10 @@ export default function PostModal({ price }: ModalProps) {
             X
           </label>
           <h3 className="text-lg font-bold">Buying Article from USER</h3>
-          <p className="py-4">the price is {price}ETH</p>
+          <p className="py-4 text-lg">Price: {price}ETH</p>
+          <button className="btn btn-sm" onClick={() => write?.()}>
+            Buy This Post
+          </button>
         </div>
       </div>
     </>
